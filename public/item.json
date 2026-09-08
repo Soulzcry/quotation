@@ -1,7 +1,7 @@
 [
   {
     "value": "OPT-001",
-    "label": "Lenovo Yoga Slim 7i (Gen 9) - RM4,999",
+    "label": "Lenovo Yoga Slim 7i (Gen 9) - RM5,000",
     "type": "laptop_only",
     "brand": "Lenovo",
     "model": "Yoga Slim 7i (Gen 9)",
@@ -49,7 +49,7 @@
   },
   {
     "value": "OPT-004",
-    "label": "MSI Cyborg 15 AI - RM4,999",
+    "label": "MSI Cyborg 15 AI - RM5,000",
     "type": "laptop_only",
     "brand": "MSI",
     "model": "Cyborg 15 AI (A1V)",
@@ -65,7 +65,7 @@
   },
   {
     "value": "OPT-005",
-    "label": "Acer Swift Go 14 OLED - RM4,999",
+    "label": "Acer Swift Go 14 OLED - RM5,000",
     "type": "laptop_only",
     "brand": "Acer",
     "model": "Swift Go 14 OLED (SFG14-73)",
