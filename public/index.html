@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistem Jana Sebut Harga Pelbagai Syarikat</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Cinzel, Lora, Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- html2pdf.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
+    .font-mzr-title { font-family: 'Cinzel', serif; }
+    .font-mzr-body { font-family: 'Lora', serif; }
+    .font-alt { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #quotation-paper, #quotation-paper * {
+        visibility: visible;
+      }
+      #quotation-paper {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+        border: none;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen font-sans">
+
+  <!-- ================= SKRIN LOGIN PIN ================= -->
+  <div id="pin-screen" class="fixed inset-0 bg-slate-900/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white max-w-sm w-full rounded-2xl p-6 shadow-2xl border border-slate-200 text-center space-y-5">
+      <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+        </svg>
+      </div>
+
+      <div>
+        <h2 class="text-xl font-black text-slate-900 tracking-tight">Kemasukan Sistem</h2>
+        <p class="text-xs text-slate-500 mt-1">Sila masukkan PIN Keselamatan untuk meneruskan</p>
+      </div>
+
+      <form onsubmit="handlePinSubmit(event)" class="space-y-4">
+        <div>
+          <input type="password" id="input-pin" inputmode="numeric" placeholder="Masukkan PIN" maxlength="12"
+            class="w-full text-center tracking-[0.3em] font-mono text-xl py-3 px-4 border-2 border-slate-200 rounded-xl focus:border-blue-600 outline-none transition" required autofocus />
+          <p id="pin-error-msg" class="text-xs text-red-600 mt-2 hidden"></p>
+        </div>
+
+        <button type="submit" id="btn-verify-pin"
+          class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl transition text-sm flex items-center justify-center gap-2">
+          <span>Sahkan & Masuk</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= APLIKASI UTAMA (QUOTATION SPA) ================= -->
+  <div id="main-app" class="p-4 md:p-8 hidden">
+    <!-- Bar Navigasi Atas & Logout -->
+    <div class="max-w-7xl mx-auto flex justify-between items-center mb-6 pb-4 border-b border-slate-200">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span class="text-xs font-semibold text-slate-600">Sistem Sebut Harga Aktif</span>
+      </div>
+      <button onclick="handleLogout()" class="text-xs font-medium text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 py-1.5 px-3 rounded-lg transition">
+        Log Keluar
+      </button>
+    </div>
+
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+      <!-- BAHAGIAN BORANG KAWALAN (KIRI) -->
+      <div class="lg:col-span-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6 self-start">
+        <div class="border-b pb-4">
+          <h1 class="text-xl font-black text-slate-900 tracking-tight">Penjana Sebut Harga</h1>
+          <p class="text-xs text-slate-500 mt-1">Siri sebut harga dikunci dan dikemas kini automatik</p>
+        </div>
+
+        <!-- Pemilihan Syarikat -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Entiti Perniagaan</label>
+          <div class="grid grid-cols-1 gap-2.5">
+            <button type="button" id="btn-comp-mzr" onclick="setCompany('MZR')"
+              class="p-3 border-2 rounded-xl text-left transition-all border-emerald-700 bg-emerald-50 text-emerald-950 font-semibold flex items-center justify-between">
+              <div>
+                <p class="text-sm font-bold">Mirzaquan Resources</p>
+                <p class="text-[11px] text-emerald-700 font-normal">Format Korporat Klasik (MZR/QT/...)</p>
+              </div>
+              <span class="text-xs px-2 py-0.5 bg-emerald-200 text-emerald-900 rounded font-mono">TEMA 1</span>
+            </button>
+
+            <button type="button" id="btn-comp-alt" onclick="setCompany('ALT')"
+              class="p-3 border-2 rounded-xl text-left transition-all border-slate-200 hover:border-slate-300 text-slate-700 font-semibold flex items-center justify-between">
+              <div>
+                <p class="text-sm font-bold">Axis Logistics Technologies</p>
+                <p class="text-[11px] text-slate-500 font-normal">Format Digital Minimalis (ALT/EST/...)</p>
+              </div>
+              <span class="text-xs px-2 py-0.5 bg-slate-100 text-slate-700 rounded font-mono">TEMA 2</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Maklumat Penerima -->
+        <div class="space-y-3">
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Maklumat Pelanggan / Klien</label>
+          <input type="text" id="cust-name" placeholder="Nama Syarikat / Jabatan"
+            class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-slate-400 outline-none text-sm"
+            value="Bahagian Pengurusan Teknologi Maklumat" />
+          <textarea id="cust-address" placeholder="Alamat Penuh" rows="2"
+            class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-slate-400 outline-none text-sm">Tingkat 5, Menara Perkasa, Persiaran Perdana, 62100 Putrajaya</textarea>
+        </div>
+
+        <!-- Dropdown Item dari item.json -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Pilihan Item / Kombo</label>
+          <select id="item-dropdown" class="w-full px-3 py-2.5 border rounded-lg focus:ring-2 focus:ring-slate-400 outline-none text-xs bg-white font-medium">
+            <option value="">Memuatkan senarai item.json...</option>
+          </select>
+        </div>
+
+        <!-- Kuantiti & Tempoh Sah -->
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Kuantiti</label>
+            <input type="number" id="item-qty" value="1" min="1"
+              class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-slate-400 outline-none text-sm" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+              Tempoh Sah <span class="text-[10px] text-slate-400 font-normal">(0 = "-")</span>
+            </label>
+            <input type="text" id="quote-validity" value="30 Hari" placeholder="cth: 30 Hari atau 0"
+              class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-slate-400 outline-none text-sm" />
+          </div>
+        </div>
+
+        <!-- Tindakan & Status Log -->
+        <div class="pt-3 space-y-3">
+          <button id="btn-download" onclick="executeQuotationWorkflow()"
+            class="w-full bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-bold py-3.5 px-4 rounded-xl transition text-sm shadow flex items-center justify-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+            </svg>
+            <span id="btn-label">Kunci Siri, Simpan Fail & Muat Turun PDF</span>
+          </button>
+
+          <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs space-y-1.5">
+            <div class="flex justify-between items-center">
+              <span class="text-slate-500 font-medium">Jumlah Rekod Berdaftar:</span>
+              <span id="stat-total-records" class="font-bold text-slate-800 font-mono">0</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-slate-500 font-medium">Siri Terkini Digunakan:</span>
+              <span id="stat-last-serial" class="font-bold text-emerald-700 font-mono">Tiada</span>
+            </div>
+          </div>
+
+          <button onclick="downloadRecordsJSON()" class="w-full text-center text-xs text-blue-600 hover:underline font-medium py-1">
+            Muat Turun Semula Arkib Fail JSON Manual
+          </button>
+        </div>
+      </div>
+
+      <!-- BAHAGIAN KERTAS DOKUMEN (KANAN) -->
+      <div class="lg:col-span-8 flex justify-center">
+        <div id="quotation-paper" class="bg-white w-full max-w-[820px] rounded-xl shadow-xl min-h-[1050px] border border-slate-200 overflow-hidden flex flex-col justify-between">
+          <!-- Disuntik oleh renderQuotation() -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // ================= PENGURUSAN PENGESAHAN PIN =================
+    async function handlePinSubmit(e) {
+      e.preventDefault();
+      const pinInput = document.getElementById('input-pin');
+      const errEl = document.getElementById('pin-error-msg');
+      const btn = document.getElementById('btn-verify-pin');
+      const enteredPin = pinInput.value.trim();
+
+      errEl.classList.add('hidden');
+      btn.disabled = true;
+      btn.innerHTML = '<span>Menyemak...</span>';
+
+      try {
+        const res = await fetch('/api/verify-pin', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pin: enteredPin })
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          sessionStorage.setItem('app_authenticated', data.token);
+          revealApp();
+        } else {
+          errEl.textContent = data.message || 'PIN tidak sah!';
+          errEl.classList.remove('hidden');
+          pinInput.value = '';
+          pinInput.focus();
+        }
+      } catch (error) {
+        errEl.textContent = 'Gagal menghubungi pelayan / Endpoint API belum sedia.';
+        errEl.classList.remove('hidden');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Sahkan & Masuk</span>';
+      }
+    }
+
+    function revealApp() {
+      document.getElementById('pin-screen').classList.add('hidden');
+      document.getElementById('main-app').classList.remove('hidden');
+      loadItems();
+    }
+
+    function handleLogout() {
+      sessionStorage.removeItem('app_authenticated');
+      window.location.reload();
+    }
+
+    function checkAuthOnLoad() {
+      const auth = sessionStorage.getItem('app_authenticated');
+      if (auth) {
+        revealApp();
+      }
+    }
+
+    // ================= LOGIK APLIKASI SEBUT HARGA =================
+    const companyData = {
+      MZR: {
+        code: "MZR",
+        name: "MIRZAQUAN RESOURCES",
+        address: "LOT 2130-19 JALAN CHANGKAT, SIMPANG 3 GOMBAK,\n53100 KUALA LUMPUR, SELANGOR.",
+        tel: "013-306 4618",
+        logo: "logoMZR.png",
+        prefix: "MZR/QT"
+      },
+      ALT: {
+        code: "ALT",
+        name: "AXIS LOGISTICS TECHNOLOGIES",
+        address: "B-3A-22, Pusat Dagangan Pelangi, Pelangi Damansara PJU 6,\n47800 Petaling Jaya, Selangor Darul Ehsan, Malaysia.",
+        tel: "03-83290277",
+        logo: "logoALT.png",
+        prefix: "ALT/EST"
+      }
+    };
+
+    let currentCompany = 'MZR';
+    let availableItems = [];
+    let quotationRecords = JSON.parse(localStorage.getItem('registered_quotation_serials') || '[]');
+
+    function getNextSerialNo(prefix) {
+      const year = new Date().getFullYear();
+      const pattern = `${prefix}/${year}/`;
+
+      const matching = quotationRecords
+        .filter(r => r.quoteNo && r.quoteNo.startsWith(pattern))
+        .map(r => {
+          const parts = r.quoteNo.split('/');
+          return parseInt(parts[parts.length - 1], 10) || 0;
+        });
+
+      const maxSeq = matching.length > 0 ? Math.max(...matching) : 0;
+      const nextSeq = String(maxSeq + 1).padStart(4, '0');
+      return `${pattern}${nextSeq}`;
+    }
+
+    async function loadItems() {
+      try {
+        const response = await fetch('item.json');
+        if (!response.ok) throw new Error("Gagal load item.json");
+        availableItems = await response.json();
+      } catch (err) {
+        console.warn("Menggunakan data fallback sementara:", err);
+        availableItems = [
+          {
+            "value": "OPT-001",
+            "label": "Lenovo Yoga Slim 7i (Gen 9) [Core Ultra 7, 16GB, 1TB SSD, 14\" OLED] - RM4,999",
+            "type": "laptop_only",
+            "brand": "Lenovo",
+            "model": "Yoga Slim 7i (Gen 9)",
+            "price": 4999.00,
+            "specs": {
+              "cpu": "Intel Core Ultra 7 155H (16-Core)",
+              "ram": "16GB LPDDR5X-7467MHz",
+              "gpu": "Intel Arc Graphics",
+              "storage": "1TB M.2 NVMe PCIe 4.0 SSD",
+              "display": "14.0\" WUXGA (1920x1200) OLED 120Hz",
+              "os": "Windows 11 Home"
+            }
+          }
+        ];
+      }
+      populateDropdown();
+      updateDashboardStats();
+      renderQuotation();
+    }
+
+    function populateDropdown() {
+      const dropdown = document.getElementById('item-dropdown');
+      dropdown.innerHTML = availableItems.map(item => `
+        <option value="${item.value}">${item.label}</option>
+      `).join('');
+    }
+
+    function updateDashboardStats() {
+      document.getElementById('stat-total-records').textContent = quotationRecords.length;
+      if (quotationRecords.length > 0) {
+        const last = quotationRecords[quotationRecords.length - 1];
+        document.getElementById('stat-last-serial').textContent = last.quoteNo;
+      } else {
+        document.getElementById('stat-last-serial').textContent = "Belum Ada";
+      }
+    }
+
+    function setCompany(code) {
+      currentCompany = code;
+      const btnMzr = document.getElementById('btn-comp-mzr');
+      const btnAlt = document.getElementById('btn-comp-alt');
+
+      if (code === 'MZR') {
+        btnMzr.className = "p-3 border-2 rounded-xl text-left transition-all border-emerald-700 bg-emerald-50 text-emerald-950 font-semibold flex items-center justify-between";
+        btnAlt.className = "p-3 border-2 rounded-xl text-left transition-all border-slate-200 hover:border-slate-300 text-slate-700 font-semibold flex items-center justify-between";
+      } else {
+        btnAlt.className = "p-3 border-2 rounded-xl text-left transition-all border-blue-800 bg-blue-50 text-blue-950 font-semibold flex items-center justify-between";
+        btnMzr.className = "p-3 border-2 rounded-xl text-left transition-all border-slate-200 hover:border-slate-300 text-slate-700 font-semibold flex items-center justify-between";
+      }
+
+      renderQuotation();
+    }
+
+    function renderQuotation() {
+      const paper = document.getElementById('quotation-paper');
+      const comp = companyData[currentCompany];
+      const selectedValue = document.getElementById('item-dropdown').value;
+      const item = availableItems.find(i => i.value === selectedValue) || availableItems[0];
+      const qty = parseInt(document.getElementById('item-qty').value) || 1;
+
+      const custName = document.getElementById('cust-name').value || 'Nama Pelanggan';
+      const custAddress = document.getElementById('cust-address').value || 'Alamat Pelanggan';
+
+      // Logik Tempoh Sah: 0 = "-"
+      const rawValidity = document.getElementById('quote-validity').value.trim();
+      let validityText = rawValidity;
+      if (rawValidity === '0' || rawValidity.toLowerCase() === '0 hari' || rawValidity.toLowerCase() === 'unlimited' || !rawValidity) {
+        validityText = "-";
+      }
+
+      const today = new Date().toLocaleDateString('ms-MY', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      const quoteNo = getNextSerialNo(comp.prefix);
+      const subtotal = item ? item.price * qty : 0;
+
+      if (currentCompany === 'MZR') {
+        paper.className = "bg-[#fffdfa] w-full max-w-[820px] p-10 md:p-12 min-h-[1050px] border border-stone-300 font-mzr-body text-stone-900 flex flex-col justify-between shadow-md";
+        paper.innerHTML = `
+          <div>
+            <div class="flex justify-between items-center pb-5 border-b-4 border-double border-emerald-900">
+              <div class="space-y-1 max-w-[65%]">
+                <h2 class="text-2xl font-bold font-mzr-title tracking-wide text-emerald-950">${comp.name}</h2>
+                <p class="text-[12px] text-stone-700 leading-tight whitespace-pre-line">${comp.address}</p>
+                <p class="text-xs font-semibold text-emerald-900 pt-1">Tel: ${comp.tel}</p>
+              </div>
+              <div class="w-28 h-24 flex items-center justify-center p-1 bg-white border border-stone-300">
+                <img src="${comp.logo}" alt="MZR" class="max-h-full max-w-full object-contain" onerror="this.onerror=null; this.src='https://placehold.co/120x80?text=MZR+LOGO';" />
+              </div>
+            </div>
+
+            <div class="text-center my-6">
+              <h3 class="font-mzr-title text-xl font-bold tracking-widest uppercase underline decoration-emerald-800 decoration-1 underline-offset-4 text-stone-900">
+                SEBUT HARGA RASMI
+              </h3>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 text-xs mb-6">
+              <div class="border border-stone-400 p-3 bg-stone-50/50">
+                <p class="text-[11px] font-bold uppercase text-stone-600 tracking-wider">Kepada Pihak:</p>
+                <p class="font-bold text-sm text-stone-950 mt-1">${custName}</p>
+                <p class="text-stone-700 whitespace-pre-line mt-1">${custAddress}</p>
+              </div>
+              <div class="border border-stone-400 p-3 bg-stone-50/50 flex flex-col justify-between">
+                <div class="space-y-1">
+                  <div class="flex justify-between"><span class="text-stone-600">No. Sebut Harga:</span> <span class="font-mono font-bold text-emerald-950 text-sm" id="active-quote-no">${quoteNo}</span></div>
+                  <div class="flex justify-between"><span class="text-stone-600">Tarikh Dikeluarkan:</span> <span>${today}</span></div>
+                  <div class="flex justify-between"><span class="text-stone-600">Tempoh Sah:</span> <span class="font-semibold text-stone-900">${validityText}</span></div>
+                </div>
+                <div class="text-right text-[10px] text-stone-500 italic mt-2">Matawang: Ringgit Malaysia (MYR)</div>
+              </div>
+            </div>
+
+            <table class="w-full text-xs border-collapse border border-stone-400">
+              <thead>
+                <tr class="bg-emerald-950 text-white font-semibold">
+                  <th class="border border-stone-400 p-2.5 text-center w-12">BIL</th>
+                  <th class="border border-stone-400 p-2.5 text-left">PERIHAL BARANGAN / SPESIFIKASI</th>
+                  <th class="border border-stone-400 p-2.5 text-center w-16">KUANTITI</th>
+                  <th class="border border-stone-400 p-2.5 text-right w-28">HARGA SEUNIT (RM)</th>
+                  <th class="border border-stone-400 p-2.5 text-right w-28">JUMLAH (RM)</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${renderItemRowsMZR(item, qty)}
+              </tbody>
+            </table>
+          </div>
+
+          <div class="mt-8 pt-4">
+            <div class="flex justify-end mb-8">
+              <table class="w-64 text-xs border border-stone-400">
+                <tr>
+                  <td class="p-2 bg-stone-100 font-semibold border-b border-stone-300">Jumlah Kasar:</td>
+                  <td class="p-2 text-right border-b border-stone-300">RM ${subtotal.toLocaleString('en-MY', { minimumFractionDigits: 2 })}</td>
+                </tr>
+                <tr>
+                  <td class="p-2 bg-stone-100 font-semibold border-b border-stone-300">Cukai (0%):</td>
+                  <td class="p-2 text-right border-b border-stone-300">RM 0.00</td>
+                </tr>
+                <tr class="bg-emerald-900 text-white font-bold text-sm">
+                  <td class="p-2.5">JUMLAH BESAR:</td>
+                  <td class="p-2.5 text-right">RM ${subtotal.toLocaleString('en-MY', { minimumFractionDigits: 2 })}</td>
+                </tr>
+              </table>
+            </div>
+
+            <div class="grid grid-cols-2 gap-8 text-xs border-t border-stone-300 pt-6">
+              <div class="text-[11px] text-stone-600 space-y-1">
+                <p class="font-bold text-stone-800 underline">SYARAT & TERMA:</p>
+                <p>1. Bayaran cek/pindahan bank kepada akaun: <b>MIRZAQUAN RESOURCES</b>.</p>
+                <p>2. Penghantaran dalam tempoh 7-14 hari bekerja dari tarikh pesanan disahkan.</p>
+              </div>
+              <div class="text-center">
+                <p class="text-[11px] text-stone-500 mb-12">Disediakan dan disahkan oleh,</p>
+                <div class="border-b border-stone-800 w-48 mx-auto"></div>
+                <p class="font-bold text-stone-900 mt-1 uppercase text-[11px]">Pegawai Bertanggungjawab</p>
+                <p class="text-[10px] text-stone-500">${comp.name}</p>
+              </div>
+            </div>
+          </div>
+        `;
+      } else {
+        paper.className = "bg-white w-full max-w-[820px] min-h-[1050px] font-alt text-slate-800 flex flex-col justify-between shadow-xl";
+        paper.innerHTML = `
+          <div>
+            <div class="bg-slate-900 text-white p-8 md:p-10 flex justify-between items-center">
+              <div class="flex items-center gap-4">
+                <div class="w-16 h-16 bg-white p-1.5 rounded-lg flex items-center justify-center">
+                  <img src="${comp.logo}" alt="ALT" class="max-h-full max-w-full object-contain" onerror="this.onerror=null; this.src='https://placehold.co/100x100?text=ALT';" />
+                </div>
+                <div>
+                  <h2 class="text-lg font-black tracking-wider uppercase text-blue-400">${comp.name}</h2>
+                  <p class="text-[11px] text-slate-300 max-w-sm whitespace-pre-line leading-relaxed">${comp.address}</p>
+                  <p class="text-xs text-slate-400 font-mono mt-0.5">T: ${comp.tel}</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <span class="text-3xl font-black tracking-widest text-slate-100">QUOTATION</span>
+                <p class="text-xs font-mono text-blue-400 mt-1" id="active-quote-no">${quoteNo}</p>
+              </div>
+            </div>
+
+            <div class="p-8 md:p-10 pb-0">
+              <div class="flex justify-between items-start border-b border-slate-200 pb-6 mb-6">
+                <div>
+                  <span class="text-[10px] font-extrabold uppercase tracking-widest text-blue-600">DISEDIAKAN UNTUK</span>
+                  <h4 class="text-base font-bold text-slate-900 mt-1">${custName}</h4>
+                  <p class="text-xs text-slate-500 whitespace-pre-line mt-1 max-w-md">${custAddress}</p>
+                </div>
+                <div class="text-right space-y-1 text-xs">
+                  <div>
+                    <span class="text-slate-400 text-[11px] block">TARIKH</span>
+                    <span class="font-bold text-slate-800">${today}</span>
+                  </div>
+                  <div class="pt-2">
+                    <span class="text-slate-400 text-[11px] block">TEMPOH SAH</span>
+                    <span class="inline-block px-2.5 py-0.5 bg-slate-100 text-slate-800 font-bold rounded text-xs font-mono">${validityText}</span>
+                  </div>
+                </div>
+              </div>
+
+              <table class="w-full text-xs">
+                <thead>
+                  <tr class="text-slate-400 text-[11px] font-bold border-b border-slate-200 uppercase tracking-wider">
+                    <th class="py-3 px-2 text-left">ITEM & DESKRIPSI SISTEM</th>
+                    <th class="py-3 px-2 text-center w-16">UNIT</th>
+                    <th class="py-3 px-2 text-right w-28">KADAR (RM)</th>
+                    <th class="py-3 px-2 text-right w-28">JUMLAH (RM)</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                  ${renderItemRowsALT(item, qty)}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="p-8 md:p-10 pt-0">
+            <div class="flex justify-end pt-4 border-t border-slate-200">
+              <div class="w-72 space-y-2 text-xs">
+                <div class="flex justify-between text-slate-500">
+                  <span>Sub-Jumlah:</span>
+                  <span class="font-mono">RM ${subtotal.toLocaleString('en-MY', { minimumFractionDigits: 2 })}</span>
+                </div>
+                <div class="flex justify-between text-slate-500">
+                  <span>SST (0%):</span>
+                  <span class="font-mono">RM 0.00</span>
+                </div>
+                <div class="flex justify-between items-center text-sm font-black text-slate-900 border-t border-slate-200 pt-2">
+                  <span>JUMLAH KESELURUHAN:</span>
+                  <span class="text-blue-700 text-base font-mono">RM ${subtotal.toLocaleString('en-MY', { minimumFractionDigits: 2 })}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-12 pt-6 border-t border-slate-100 flex justify-between items-end text-[11px] text-slate-400">
+              <div class="space-y-1">
+                <p class="font-semibold text-slate-700">Terma Sistem Digital:</p>
+                <p>Dokumen ini dijana secara elektronik oleh sistem Axis Logistics Tech.</p>
+                <p>Sila kemukakan pesanan rasmi (PO) untuk pengesahan pembekalan.</p>
+              </div>
+              <div class="text-right">
+                <div class="w-40 border-b border-slate-300 mb-2"></div>
+                <p class="font-medium text-slate-600">Pengesahan Wakil Syarikat</p>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function renderItemRowsMZR(item, qty) {
+      if (!item) return '';
+      const total = item.price * qty;
+
+      if (item.type === 'laptop_only') {
+        return `
+          <tr class="align-top bg-stone-50/30">
+            <td class="border border-stone-400 p-2.5 text-center font-bold">1</td>
+            <td class="border border-stone-400 p-2.5">
+              <p class="font-bold text-stone-950 text-sm">${item.brand} ${item.model}</p>
+              <div class="mt-1 text-[11px] text-stone-700 space-y-0.5 leading-relaxed font-sans">
+                <p>• <b>Pemproses:</b> ${item.specs.cpu}</p>
+                <p>• <b>Memori (RAM):</b> ${item.specs.ram}</p>
+                <p>• <b>Storan Data:</b> ${item.specs.storage}</p>
+                <p>• <b>Grafik:</b> ${item.specs.gpu}</p>
+                <p>• <b>Paparan:</b> ${item.specs.display}</p>
+                <p>• <b>Sistem Operasi:</b> ${item.specs.os}</p>
+              </div>
+            </td>
+            <td class="border border-stone-400 p-2.5 text-center font-bold">${qty}</td>
+            <td class="border border-stone-400 p-2.5 text-right font-mono">${item.price.toFixed(2)}</td>
+            <td class="border border-stone-400 p-2.5 text-right font-mono font-bold">${total.toFixed(2)}</td>
+          </tr>
+        `;
+      } else {
+        return `
+          <tr class="align-top bg-stone-50/30">
+            <td class="border border-stone-400 p-2.5 text-center font-bold">1</td>
+            <td class="border border-stone-400 p-2.5">
+              <p class="font-bold text-stone-950 text-sm">PAKEJ KOMBO: ${item.laptop.brand} + PENCETAK ${item.printer.brand}</p>
+              <div class="mt-2 text-[11px] text-stone-800 space-y-1.5 font-sans">
+                <div class="p-2 border border-stone-300 bg-white rounded">
+                  <p class="font-bold text-emerald-900">A. ${item.laptop.brand} ${item.laptop.model}</p>
+                  <p class="text-stone-600">${item.laptop.specs.cpu} | ${item.laptop.specs.ram} | ${item.laptop.specs.storage} | ${item.laptop.specs.display}</p>
+                </div>
+                <div class="p-2 border border-stone-300 bg-white rounded">
+                  <p class="font-bold text-emerald-900">B. Pencetak ${item.printer.brand} ${item.printer.model}</p>
+                  <p class="text-stone-600">${item.printer.specs.type} | Fungsi: ${item.printer.specs.functions} | ${item.printer.specs.connectivity}</p>
+                </div>
+              </div>
+            </td>
+            <td class="border border-stone-400 p-2.5 text-center font-bold">${qty}</td>
+            <td class="border border-stone-400 p-2.5 text-right font-mono">${item.price.toFixed(2)}</td>
+            <td class="border border-stone-400 p-2.5 text-right font-mono font-bold">${total.toFixed(2)}</td>
+          </tr>
+        `;
+      }
+    }
+
+    function renderItemRowsALT(item, qty) {
+      if (!item) return '';
+      const total = item.price * qty;
+
+      if (item.type === 'laptop_only') {
+        return `
+          <tr class="align-top">
+            <td class="py-4 px-2">
+              <p class="font-bold text-slate-900 text-sm tracking-tight">${item.brand} ${item.model}</p>
+              <div class="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 text-[11px] text-slate-500 font-medium">
+                <div><span class="text-slate-400">Processor:</span> ${item.specs.cpu}</div>
+                <div><span class="text-slate-400">Memory:</span> ${item.specs.ram}</div>
+                <div><span class="text-slate-400">Storage:</span> ${item.specs.storage}</div>
+                <div><span class="text-slate-400">Graphics:</span> ${item.specs.gpu}</div>
+                <div><span class="text-slate-400">Panel:</span> ${item.specs.display}</div>
+                <div><span class="text-slate-400">OS:</span> ${item.specs.os}</div>
+              </div>
+            </td>
+            <td class="py-4 px-2 text-center font-semibold text-slate-700">${qty}</td>
+            <td class="py-4 px-2 text-right font-mono text-slate-700">${item.price.toFixed(2)}</td>
+            <td class="py-4 px-2 text-right font-mono font-bold text-slate-900">${total.toFixed(2)}</td>
+          </tr>
+        `;
+      } else {
+        return `
+          <tr class="align-top">
+            <td class="py-4 px-2">
+              <p class="font-bold text-blue-900 text-sm tracking-tight">HARDWARE BUNDLE: ${item.laptop.model} + ${item.printer.model}</p>
+              <div class="mt-3 space-y-2 text-[11px]">
+                <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-100">
+                  <span class="font-bold text-slate-800 block text-xs">Unit Utama: ${item.laptop.brand} ${item.laptop.model}</span>
+                  <span class="text-slate-500">${item.laptop.specs.cpu} • ${item.laptop.specs.ram} • ${item.laptop.specs.storage} • ${item.laptop.specs.display}</span>
+                </div>
+                <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-100">
+                  <span class="font-bold text-slate-800 block text-xs">Perkakasan Tambahan: ${item.printer.brand} ${item.printer.model}</span>
+                  <span class="text-slate-500">${item.printer.specs.type} • ${item.printer.specs.functions} • ${item.printer.specs.connectivity}</span>
+                </div>
+              </div>
+            </td>
+            <td class="py-4 px-2 text-center font-semibold text-slate-700">${qty}</td>
+            <td class="py-4 px-2 text-right font-mono text-slate-700">${item.price.toFixed(2)}</td>
+            <td class="py-4 px-2 text-right font-mono font-bold text-slate-900">${total.toFixed(2)}</td>
+          </tr>
+        `;
+      }
+    }
+
+    async function executeQuotationWorkflow() {
+      const btn = document.getElementById('btn-download');
+      const label = document.getElementById('btn-label');
+      const comp = companyData[currentCompany];
+      const quoteNoEl = document.getElementById('active-quote-no');
+      const assignedQuoteNo = quoteNoEl.textContent.trim();
+
+      const isDuplicate = quotationRecords.some(r => r.quoteNo === assignedQuoteNo);
+      if (isDuplicate) {
+        alert("Ralat: Nombor siri ini telah wujud. Sistem akan mengemas kini ke nombor baharu.");
+        renderQuotation();
+        return;
+      }
+
+      btn.disabled = true;
+      label.textContent = "Menjana PDF & Mengemas Kini Siri...";
+
+      const selectedValue = document.getElementById('item-dropdown').value;
+      const selectedItem = availableItems.find(i => i.value === selectedValue);
+      const qty = parseInt(document.getElementById('item-qty').value) || 1;
+
+      const newRecord = {
+        quoteNo: assignedQuoteNo,
+        timestamp: new Date().toISOString(),
+        companyCode: comp.code,
+        companyName: comp.name,
+        validity: document.getElementById('quote-validity').value.trim() === '0' ? '-' : document.getElementById('quote-validity').value,
+        customer: {
+          name: document.getElementById('cust-name').value,
+          address: document.getElementById('cust-address').value
+        },
+        item: selectedItem,
+        quantity: qty,
+        totalAmount: selectedItem ? (selectedItem.price * qty) : 0
+      };
+
+      quotationRecords.push(newRecord);
+      localStorage.setItem('registered_quotation_serials', JSON.stringify(quotationRecords));
+
+      triggerJSONDownload(quotationRecords, `quotation_log_${comp.code}.json`);
+
+      const element = document.getElementById('quotation-paper');
+      const safeFileName = assignedQuoteNo.replace(/[\/\\]/g, '_');
+
+      const opt = {
+        margin: [5, 5, 5, 5],
+        filename: `${safeFileName}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, logging: false },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      try {
+        await html2pdf().set(opt).from(element).save();
+      } catch (err) {
+        console.error("Ralat janaan PDF:", err);
+      } finally {
+        updateDashboardStats();
+        renderQuotation();
+        btn.disabled = false;
+        label.textContent = "Kunci Siri, Simpan Fail & Muat Turun PDF";
+      }
+    }
+
+    function triggerJSONDownload(data, filename) {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data, null, 2));
+      const anchor = document.createElement('a');
+      anchor.setAttribute("href", dataStr);
+      anchor.setAttribute("download", filename);
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+    }
+
+    function downloadRecordsJSON() {
+      triggerJSONDownload(quotationRecords, `arkib_sebutharga_${new Date().toISOString().slice(0,10)}.json`);
+    }
+
+    // Pendengar input
+    document.getElementById('item-dropdown').addEventListener('change', renderQuotation);
+    document.getElementById('item-qty').addEventListener('input', renderQuotation);
+    document.getElementById('cust-name').addEventListener('input', renderQuotation);
+    document.getElementById('cust-address').addEventListener('input', renderQuotation);
+    document.getElementById('quote-validity').addEventListener('input', renderQuotation);
+
+    // Semakan auth semasa halaman dimuat
+    window.onload = checkAuthOnLoad;
+  </script>
+</body>
+</html>

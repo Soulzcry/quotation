@@ -1,0 +1,232 @@
+[
+  {
+    "value": "OPT-001",
+    "label": "Lenovo Yoga Slim 7i (Gen 9) - RM4,999",
+    "type": "laptop_only",
+    "brand": "Lenovo",
+    "model": "Yoga Slim 7i (Gen 9)",
+    "price": 5000.00,
+    "specs": {
+      "cpu": "Intel Core Ultra 7 155H (16-Core)",
+      "ram": "16GB LPDDR5X-7467MHz",
+      "gpu": "Intel Arc Graphics",
+      "storage": "1TB M.2 NVMe PCIe 4.0 SSD",
+      "display": "14.0\" WUXGA (1920x1200) OLED, 60Hz/120Hz, 100% DCI-P3",
+      "os": "Windows 11 Home"
+    }
+  },
+  {
+    "value": "OPT-002",
+    "label": "Lenovo LOQ 15 (RTX 4060) - RM5,199",
+    "type": "laptop_only",
+    "brand": "Lenovo",
+    "model": "LOQ 15 (15ARP9 / 15AHP9)",
+    "price": 5199.00,
+    "specs": {
+      "cpu": "AMD Ryzen 7 8845HS / 7435HS",
+      "ram": "16GB DDR5-4800MHz (Upgradeable)",
+      "gpu": "NVIDIA GeForce RTX 4060 8GB GDDR6 (115W)",
+      "storage": "512GB M.2 NVMe PCIe 4.0 SSD",
+      "display": "15.6\" FHD (1920x1080) IPS, 144Hz, 100% sRGB",
+      "os": "Windows 11 Home"
+    }
+  },
+  {
+    "value": "OPT-003",
+    "label": "ASUS TUF Gaming F15 - RM5,099",
+    "type": "laptop_only",
+    "brand": "ASUS",
+    "model": "TUF Gaming F15 (FX507)",
+    "price": 5099.00,
+    "specs": {
+      "cpu": "Intel Core i7-13620H (10-Core)",
+      "ram": "16GB DDR5-5200MHz",
+      "gpu": "NVIDIA GeForce RTX 4060 8GB GDDR6 (140W)",
+      "storage": "1TB M.2 NVMe PCIe 4.0 SSD",
+      "display": "15.6\" FHD (1920x1080) IPS, 144Hz, G-Sync",
+      "os": "Windows 11 Home"
+    }
+  },
+  {
+    "value": "OPT-004",
+    "label": "MSI Cyborg 15 AI - RM4,999",
+    "type": "laptop_only",
+    "brand": "MSI",
+    "model": "Cyborg 15 AI (A1V)",
+    "price": 5000.00,
+    "specs": {
+      "cpu": "Intel Core Ultra 7 155H",
+      "ram": "16GB DDR5-5600MHz",
+      "gpu": "NVIDIA GeForce RTX 4060 8GB GDDR6",
+      "storage": "1TB M.2 NVMe PCIe 4.0 SSD",
+      "display": "15.6\" FHD (1920x1080) IPS-Level, 144Hz",
+      "os": "Windows 11 Home"
+    }
+  },
+  {
+    "value": "OPT-005",
+    "label": "Acer Swift Go 14 OLED - RM4,999",
+    "type": "laptop_only",
+    "brand": "Acer",
+    "model": "Swift Go 14 OLED (SFG14-73)",
+    "price": 5000.00,
+    "specs": {
+      "cpu": "Intel Core Ultra 7 155H",
+      "ram": "32GB LPDDR5X-6400MHz",
+      "gpu": "Intel Arc Graphics",
+      "storage": "1TB M.2 NVMe PCIe 4.0 SSD",
+      "display": "14.0\" 2.8K (2880x1800) OLED, 90Hz, 100% DCI-P3",
+      "os": "Windows 11 Home"
+    }
+  },
+  {
+    "value": "OPT-006",
+    "label": "Kombo: ASUS Zenbook 14 OLED + Brother DCP-T420W - RM5,050",
+    "type": "combo",
+    "price": 5050.00,
+    "laptop": {
+      "brand": "ASUS",
+      "model": "Zenbook 14 OLED (UX3405)",
+      "price": 4500.00,
+      "specs": {
+        "cpu": "Intel Core Ultra 5 125H",
+        "ram": "16GB LPDDR5X-7467MHz",
+        "gpu": "Intel Arc Graphics",
+        "storage": "1TB M.2 NVMe PCIe 4.0 SSD",
+        "display": "14.0\" 3K (2880x1800) OLED, 120Hz, 100% DCI-P3",
+        "os": "Windows 11 Home"
+      }
+    },
+    "printer": {
+      "brand": "Brother",
+      "model": "DCP-T420W",
+      "price": 550.00,
+      "specs": {
+        "type": "Color Ink Tank 3-in-1",
+        "functions": "Print, Scan, Copy",
+        "connectivity": "USB 2.0, Wi-Fi Direct, Wireless",
+        "print_speed": "16 ipm (Black) / 9 ipm (Color)"
+      }
+    }
+  },
+  {
+    "value": "OPT-007",
+    "label": "Kombo: Lenovo IdeaPad Pro 5 + Epson EcoTank L3250 - RM5,100",
+    "type": "combo",
+    "price": 5100.00,
+    "laptop": {
+      "brand": "Lenovo",
+      "model": "IdeaPad Pro 5 (14AHP9)",
+      "price": 4450.00,
+      "specs": {
+        "cpu": "AMD Ryzen 7 8845HS",
+        "ram": "16GB LPDDR5X-6400MHz",
+        "gpu": "AMD Radeon 780M Graphics",
+        "storage": "1TB M.2 NVMe PCIe 4.0 SSD",
+        "display": "14.0\" 2.8K (2880x1800) OLED, 120Hz",
+        "os": "Windows 11 Home"
+      }
+    },
+    "printer": {
+      "brand": "Epson",
+      "model": "EcoTank L3250",
+      "price": 650.00,
+      "specs": {
+        "type": "All-in-One Ink Tank System",
+        "functions": "Print, Scan, Copy",
+        "connectivity": "Wi-Fi, Wi-Fi Direct, USB 2.0",
+        "print_speed": "10 ipm (Black) / 5 ipm (Color)"
+      }
+    }
+  },
+  {
+    "value": "OPT-008",
+    "label": "Kombo: HP Victus 16 + Canon PIXMA E470 - RM5,049",
+    "type": "combo",
+    "price": 5049.00,
+    "laptop": {
+      "brand": "HP",
+      "model": "Victus 16 (16-r0000)",
+      "price": 4799.00,
+      "specs": {
+        "cpu": "Intel Core i7-13700H (14-Core)",
+        "ram": "16GB DDR5-5200MHz",
+        "gpu": "NVIDIA GeForce RTX 4060 8GB GDDR6",
+        "storage": "512GB M.2 NVMe PCIe 4.0 SSD",
+        "display": "16.1\" FHD (1920x1080) IPS, 144Hz",
+        "os": "Windows 11 Home"
+      }
+    },
+    "printer": {
+      "brand": "Canon",
+      "model": "PIXMA E470",
+      "price": 250.00,
+      "specs": {
+        "type": "Ink Efficient All-in-One Cartridge",
+        "functions": "Print, Scan, Copy",
+        "connectivity": "Wi-Fi, Wireless Direct, USB 2.0",
+        "print_speed": "8.0 ipm (Black) / 4.0 ipm (Color)"
+      }
+    }
+  },
+  {
+    "value": "OPT-009",
+    "label": "Kombo: Lenovo ThinkPad E14 Gen 6 + Canon PIXMA G3020 - RM5,000",
+    "type": "combo",
+    "price": 5000.00,
+    "laptop": {
+      "brand": "Lenovo",
+      "model": "ThinkPad E14 Gen 6",
+      "price": 4400.00,
+      "specs": {
+        "cpu": "AMD Ryzen 7 7735HS / Intel Core Ultra 5 125H",
+        "ram": "16GB DDR5-5600MHz (Dual Slot)",
+        "gpu": "AMD Radeon 680M / Intel Arc Graphics",
+        "storage": "512GB M.2 NVMe PCIe 4.0 SSD",
+        "display": "14.0\" WUXGA (1920x1200) IPS Anti-glare",
+        "os": "Windows 11 Pro / Home"
+      }
+    },
+    "printer": {
+      "brand": "Canon",
+      "model": "PIXMA G3020",
+      "price": 600.00,
+      "specs": {
+        "type": "Refillable Ink Tank All-in-One",
+        "functions": "Print, Scan, Copy",
+        "connectivity": "Wireless, High-Speed USB 2.0",
+        "print_speed": "9.1 ipm (Black) / 5.0 ipm (Color)"
+      }
+    }
+  },
+  {
+    "value": "OPT-010",
+    "label": "Kombo: Dell Inspiron 15 (5530) + HP Smart Tank 580 - RM5,030",
+    "type": "combo",
+    "price": 5030.00,
+    "laptop": {
+      "brand": "Dell",
+      "model": "Inspiron 15 5530",
+      "price": 4450.00,
+      "specs": {
+        "cpu": "Intel Core i7-1355U (10-Core)",
+        "ram": "16GB DDR4-3200MHz / DDR5",
+        "gpu": "Intel Iris Xe Graphics",
+        "storage": "1TB M.2 NVMe PCIe SSD",
+        "display": "15.6\" FHD (1920x1080) WVA, 120Hz (dengan Numpad)",
+        "os": "Windows 11 Home"
+      }
+    },
+    "printer": {
+      "brand": "HP",
+      "model": "Smart Tank 580",
+      "price": 580.00,
+      "specs": {
+        "type": "Wireless All-in-One Ink Tank",
+        "functions": "Print, Scan, Copy",
+        "connectivity": "Wi-Fi, Bluetooth LE, Hi-Speed USB 2.0",
+        "print_speed": "12 ppm (Black) / 5 ppm (Color)"
+      }
+    }
+  }
+]
