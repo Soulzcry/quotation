@@ -18,16 +18,12 @@
     .font-mzr-body { font-family: 'Lora', serif; }
     .font-alt { font-family: 'Plus Jakarta Sans', sans-serif; }
 
-    /* Penguncian saiz A4 mutlak untuk elak terpotong */
+    /* Saiz responsif yang muat tepat pada nisbah A4 */
     .a4-container {
-      width: 794px !important;
-      min-width: 794px !important;
-      max-width: 794px !important;
-      height: 1120px !important;
-      min-height: 1120px !important;
-      max-height: 1120px !important;
+      width: 100% !important;
+      max-width: 760px !important;
+      min-height: 1040px !important;
       box-sizing: border-box !important;
-      overflow: hidden !important;
     }
 
     @media print {
@@ -41,8 +37,7 @@
         position: absolute;
         left: 0;
         top: 0;
-        width: 794px;
-        height: 1120px;
+        width: 100%;
         margin: 0;
         padding: 0;
         box-shadow: none;
@@ -84,7 +79,6 @@
 
   <!-- ================= 2. APLIKASI UTAMA (SPA) ================= -->
   <div id="main-app" class="p-4 md:p-8 hidden">
-    <!-- Bar Atas Status & Log Keluar -->
     <div class="max-w-7xl mx-auto flex justify-between items-center mb-6 pb-4 border-b border-slate-200">
       <div class="flex items-center gap-2">
         <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -157,7 +151,7 @@
             <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
               Tempoh Sah <span class="text-[10px] text-slate-400 font-normal">(0 = "-")</span>
             </label>
-            <input type="text" id="quote-validity" value="30 Hari" placeholder="cth: 30 Hari atau 0"
+            <input type="text" id="quote-validity" value="0" placeholder="cth: 30 Hari atau 0"
               class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-slate-400 outline-none text-sm" />
           </div>
         </div>
@@ -173,13 +167,13 @@
           </button>
 
           <p class="text-[11px] text-slate-400 text-center leading-relaxed">
-            * Nombor siri dikunci dan dinaikkan secara automatik di Upstash Redis sebelum dokumen PDF dijana.
+            * Nombor siri dikunci dan dinaikkan secara automatik di pelayan cloud sebelum dokumen PDF dijana.
           </p>
         </div>
       </div>
 
       <!-- BAHAGIAN KERTAS DOKUMEN (KANAN) -->
-      <div class="lg:col-span-8 flex justify-center items-start overflow-x-auto">
+      <div class="lg:col-span-8 flex justify-center items-start overflow-x-auto p-2">
         <div id="quotation-paper" class="a4-container bg-white shadow-xl flex flex-col justify-between">
           <!-- Disuntik secara dinamik oleh renderQuotation() -->
         </div>
@@ -672,26 +666,25 @@
 
         label.textContent = "Menjana Dokumen PDF...";
 
-        // 2. Jana dan muat turun fail PDF (Tetapan skala tetap A4)
+        // 2. Jana dan muat turun fail PDF (Tetapan skala automatik A4 standard)
         const element = document.getElementById('quotation-paper');
         const safeFileName = officialQuoteNo.replace(/[\/\\]/g, '_');
 
         const opt = {
-          margin: 0,
+          margin: [8, 8, 8, 8], // Margin standard 8mm sekeliling
           filename: `${safeFileName}.pdf`,
           image: { type: 'jpeg', quality: 0.98 },
           html2canvas: {
             scale: 2,
             useCORS: true,
             logging: false,
-            scrollY: 0,
-            windowWidth: 794
+            scrollX: 0,
+            scrollY: 0
           },
           jsPDF: {
-            unit: 'px',
-            format: [794, 1120],
-            orientation: 'portrait',
-            hotfixes: ['px_scaling']
+            unit: 'mm',
+            format: 'a4',
+            orientation: 'portrait'
           }
         };
 
