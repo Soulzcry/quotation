@@ -40,7 +40,7 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen font-sans">
 
-  <!-- ================= SKRIN LOGIN PIN ================= -->
+  <!-- ================= 1. SKRIN PENGESAHAN PIN ================= -->
   <div id="pin-screen" class="fixed inset-0 bg-slate-900/90 backdrop-blur-sm z-50 flex items-center justify-center p-4">
     <div class="bg-white max-w-sm w-full rounded-2xl p-6 shadow-2xl border border-slate-200 text-center space-y-5">
       <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto">
@@ -69,13 +69,13 @@
     </div>
   </div>
 
-  <!-- ================= APLIKASI UTAMA (QUOTATION SPA) ================= -->
+  <!-- ================= 2. APLIKASI UTAMA (SPA) ================= -->
   <div id="main-app" class="p-4 md:p-8 hidden">
-    <!-- Bar Navigasi Atas & Logout -->
+    <!-- Bar Atas Status & Log Keluar -->
     <div class="max-w-7xl mx-auto flex justify-between items-center mb-6 pb-4 border-b border-slate-200">
       <div class="flex items-center gap-2">
         <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-        <span class="text-xs font-semibold text-slate-600">Sistem Sebut Harga Aktif</span>
+        <span class="text-xs font-semibold text-slate-600">Sistem Sebut Harga Cloud Aktif</span>
       </div>
       <button onclick="handleLogout()" class="text-xs font-medium text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 py-1.5 px-3 rounded-lg transition">
         Log Keluar
@@ -88,7 +88,7 @@
       <div class="lg:col-span-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6 self-start">
         <div class="border-b pb-4">
           <h1 class="text-xl font-black text-slate-900 tracking-tight">Penjana Sebut Harga</h1>
-          <p class="text-xs text-slate-500 mt-1">Siri sebut harga dikunci dan dikemas kini automatik</p>
+          <p class="text-xs text-slate-500 mt-1">Siri sebut harga atomik dan dwitema korporat</p>
         </div>
 
         <!-- Pemilihan Syarikat -->
@@ -99,18 +99,18 @@
               class="p-3 border-2 rounded-xl text-left transition-all border-emerald-700 bg-emerald-50 text-emerald-950 font-semibold flex items-center justify-between">
               <div>
                 <p class="text-sm font-bold">Mirzaquan Resources</p>
-                <p class="text-[11px] text-emerald-700 font-normal">Format Korporat Klasik (MZR/QT/...)</p>
+                <p class="text-[11px] text-emerald-700 font-normal">Format Klasik / Korporat Berkanun</p>
               </div>
-              <span class="text-xs px-2 py-0.5 bg-emerald-200 text-emerald-900 rounded font-mono">TEMA 1</span>
+              <span class="text-xs px-2 py-0.5 bg-emerald-200 text-emerald-900 rounded font-mono">MZR/QT</span>
             </button>
 
             <button type="button" id="btn-comp-alt" onclick="setCompany('ALT')"
               class="p-3 border-2 rounded-xl text-left transition-all border-slate-200 hover:border-slate-300 text-slate-700 font-semibold flex items-center justify-between">
               <div>
                 <p class="text-sm font-bold">Axis Logistics Technologies</p>
-                <p class="text-[11px] text-slate-500 font-normal">Format Digital Minimalis (ALT/EST/...)</p>
+                <p class="text-[11px] text-slate-500 font-normal">Format Digital Tech / Minimalis</p>
               </div>
-              <span class="text-xs px-2 py-0.5 bg-slate-100 text-slate-700 rounded font-mono">TEMA 2</span>
+              <span class="text-xs px-2 py-0.5 bg-slate-100 text-slate-700 rounded font-mono">ALT/EST</span>
             </button>
           </div>
         </div>
@@ -149,37 +149,26 @@
           </div>
         </div>
 
-        <!-- Tindakan & Status Log -->
+        <!-- Butang Jana & Muat Turun -->
         <div class="pt-3 space-y-3">
           <button id="btn-download" onclick="executeQuotationWorkflow()"
             class="w-full bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-bold py-3.5 px-4 rounded-xl transition text-sm shadow flex items-center justify-center gap-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
             </svg>
-            <span id="btn-label">Kunci Siri, Simpan Fail & Muat Turun PDF</span>
+            <span id="btn-label">Kunci No. Siri & Muat Turun PDF</span>
           </button>
 
-          <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs space-y-1.5">
-            <div class="flex justify-between items-center">
-              <span class="text-slate-500 font-medium">Jumlah Rekod Berdaftar:</span>
-              <span id="stat-total-records" class="font-bold text-slate-800 font-mono">0</span>
-            </div>
-            <div class="flex justify-between items-center">
-              <span class="text-slate-500 font-medium">Siri Terkini Digunakan:</span>
-              <span id="stat-last-serial" class="font-bold text-emerald-700 font-mono">Tiada</span>
-            </div>
-          </div>
-
-          <button onclick="downloadRecordsJSON()" class="w-full text-center text-xs text-blue-600 hover:underline font-medium py-1">
-            Muat Turun Semula Arkib Fail JSON Manual
-          </button>
+          <p class="text-[11px] text-slate-400 text-center leading-relaxed">
+            * Nombor siri dikunci dan dinaikkan secara automatik di pelayan cloud sebelum dokumen PDF dijana.
+          </p>
         </div>
       </div>
 
       <!-- BAHAGIAN KERTAS DOKUMEN (KANAN) -->
       <div class="lg:col-span-8 flex justify-center">
         <div id="quotation-paper" class="bg-white w-full max-w-[820px] rounded-xl shadow-xl min-h-[1050px] border border-slate-200 overflow-hidden flex flex-col justify-between">
-          <!-- Disuntik oleh renderQuotation() -->
+          <!-- Disuntik secara dinamik oleh renderQuotation() -->
         </div>
       </div>
 
@@ -187,7 +176,7 @@
   </div>
 
   <script>
-    // ================= PENGURUSAN PENGESAHAN PIN =================
+    // ================= 1. PENGURUSAN PENGESAHAN PIN =================
     async function handlePinSubmit(e) {
       e.preventDefault();
       const pinInput = document.getElementById('input-pin');
@@ -244,7 +233,7 @@
       }
     }
 
-    // ================= LOGIK APLIKASI SEBUT HARGA =================
+    // ================= 2. DATA ENTITI SYARIKAT =================
     const companyData = {
       MZR: {
         code: "MZR",
@@ -257,7 +246,7 @@
       ALT: {
         code: "ALT",
         name: "AXIS LOGISTICS TECHNOLOGIES",
-        address: "B-3A-22, Pusat Dagangan Pelangi, Pelangi Damansara PJU 6,\n47800 Petaling Jaya, Selangor Darul Ehsan, Malaysia.",
+        address: "B-3A-22, PUSAT DAGANGAN PELANGI,\nPELANGI DAMANSARA PJU 6,\n47800 PETALING JAYA, SELANGOR, MALAYSIA.",
         tel: "03-83290277",
         logo: "logoALT.png",
         prefix: "ALT/EST"
@@ -266,31 +255,15 @@
 
     let currentCompany = 'MZR';
     let availableItems = [];
-    let quotationRecords = JSON.parse(localStorage.getItem('registered_quotation_serials') || '[]');
 
-    function getNextSerialNo(prefix) {
-      const year = new Date().getFullYear();
-      const pattern = `${prefix}/${year}/`;
-
-      const matching = quotationRecords
-        .filter(r => r.quoteNo && r.quoteNo.startsWith(pattern))
-        .map(r => {
-          const parts = r.quoteNo.split('/');
-          return parseInt(parts[parts.length - 1], 10) || 0;
-        });
-
-      const maxSeq = matching.length > 0 ? Math.max(...matching) : 0;
-      const nextSeq = String(maxSeq + 1).padStart(4, '0');
-      return `${pattern}${nextSeq}`;
-    }
-
+    // ================= 3. BACA DATA ITEM =================
     async function loadItems() {
       try {
         const response = await fetch('item.json');
         if (!response.ok) throw new Error("Gagal load item.json");
         availableItems = await response.json();
       } catch (err) {
-        console.warn("Menggunakan data fallback sementara:", err);
+        console.warn("Menggunakan data sementara kerana item.json belum sedia:", err);
         availableItems = [
           {
             "value": "OPT-001",
@@ -307,11 +280,39 @@
               "display": "14.0\" WUXGA (1920x1200) OLED 120Hz",
               "os": "Windows 11 Home"
             }
+          },
+          {
+            "value": "OPT-006",
+            "label": "Kombo: ASUS Zenbook 14 OLED + Brother DCP-T420W - RM5,050",
+            "type": "combo",
+            "price": 5050.00,
+            "laptop": {
+              "brand": "ASUS",
+              "model": "Zenbook 14 OLED (UX3405)",
+              "price": 4500.00,
+              "specs": {
+                "cpu": "Intel Core Ultra 5 125H",
+                "ram": "16GB LPDDR5X",
+                "gpu": "Intel Arc Graphics",
+                "storage": "1TB NVMe PCIe SSD",
+                "display": "14.0\" 3K OLED 120Hz",
+                "os": "Windows 11 Home"
+              }
+            },
+            "printer": {
+              "brand": "Brother",
+              "model": "DCP-T420W",
+              "price": 550.00,
+              "specs": {
+                "type": "All-in-One Ink Tank System",
+                "functions": "Print, Scan, Copy",
+                "connectivity": "USB 2.0, Wi-Fi Direct"
+              }
+            }
           }
         ];
       }
       populateDropdown();
-      updateDashboardStats();
       renderQuotation();
     }
 
@@ -322,16 +323,7 @@
       `).join('');
     }
 
-    function updateDashboardStats() {
-      document.getElementById('stat-total-records').textContent = quotationRecords.length;
-      if (quotationRecords.length > 0) {
-        const last = quotationRecords[quotationRecords.length - 1];
-        document.getElementById('stat-last-serial').textContent = last.quoteNo;
-      } else {
-        document.getElementById('stat-last-serial').textContent = "Belum Ada";
-      }
-    }
-
+    // ================= 4. PERTUKARAN TEMA SYARIKAT =================
     function setCompany(code) {
       currentCompany = code;
       const btnMzr = document.getElementById('btn-comp-mzr');
@@ -348,6 +340,7 @@
       renderQuotation();
     }
 
+    // ================= 5. PAPARAN DUA SUSUN ATUR DOKUMEN =================
     function renderQuotation() {
       const paper = document.getElementById('quotation-paper');
       const comp = companyData[currentCompany];
@@ -366,10 +359,12 @@
       }
 
       const today = new Date().toLocaleDateString('ms-MY', { day: '2-digit', month: '2-digit', year: 'numeric' });
-      const quoteNo = getNextSerialNo(comp.prefix);
+      const year = new Date().getFullYear();
+      const placeholderNo = `${comp.prefix}/${year}/----`;
       const subtotal = item ? item.price * qty : 0;
 
       if (currentCompany === 'MZR') {
+        // TEMPLAT 1: MIRZAQUAN RESOURCES (Tradisional / Klasik)
         paper.className = "bg-[#fffdfa] w-full max-w-[820px] p-10 md:p-12 min-h-[1050px] border border-stone-300 font-mzr-body text-stone-900 flex flex-col justify-between shadow-md";
         paper.innerHTML = `
           <div>
@@ -398,7 +393,7 @@
               </div>
               <div class="border border-stone-400 p-3 bg-stone-50/50 flex flex-col justify-between">
                 <div class="space-y-1">
-                  <div class="flex justify-between"><span class="text-stone-600">No. Sebut Harga:</span> <span class="font-mono font-bold text-emerald-950 text-sm" id="active-quote-no">${quoteNo}</span></div>
+                  <div class="flex justify-between"><span class="text-stone-600">No. Sebut Harga:</span> <span class="font-mono font-bold text-emerald-950 text-sm" id="active-quote-no">${placeholderNo}</span></div>
                   <div class="flex justify-between"><span class="text-stone-600">Tarikh Dikeluarkan:</span> <span>${today}</span></div>
                   <div class="flex justify-between"><span class="text-stone-600">Tempoh Sah:</span> <span class="font-semibold text-stone-900">${validityText}</span></div>
                 </div>
@@ -456,6 +451,7 @@
           </div>
         `;
       } else {
+        // TEMPLAT 2: AXIS LOGISTICS TECHNOLOGIES (Modern Tech)
         paper.className = "bg-white w-full max-w-[820px] min-h-[1050px] font-alt text-slate-800 flex flex-col justify-between shadow-xl";
         paper.innerHTML = `
           <div>
@@ -472,7 +468,7 @@
               </div>
               <div class="text-right">
                 <span class="text-3xl font-black tracking-widest text-slate-100">QUOTATION</span>
-                <p class="text-xs font-mono text-blue-400 mt-1" id="active-quote-no">${quoteNo}</p>
+                <p class="text-xs font-mono text-blue-400 mt-1" id="active-quote-no">${placeholderNo}</p>
               </div>
             </div>
 
@@ -641,92 +637,64 @@
       }
     }
 
+    // ================= 6. ALUR KERJA JANA SIRI & MUAT TURUN PDF =================
     async function executeQuotationWorkflow() {
       const btn = document.getElementById('btn-download');
       const label = document.getElementById('btn-label');
       const comp = companyData[currentCompany];
-      const quoteNoEl = document.getElementById('active-quote-no');
-      const assignedQuoteNo = quoteNoEl.textContent.trim();
-
-      const isDuplicate = quotationRecords.some(r => r.quoteNo === assignedQuoteNo);
-      if (isDuplicate) {
-        alert("Ralat: Nombor siri ini telah wujud. Sistem akan mengemas kini ke nombor baharu.");
-        renderQuotation();
-        return;
-      }
 
       btn.disabled = true;
-      label.textContent = "Menjana PDF & Mengemas Kini Siri...";
-
-      const selectedValue = document.getElementById('item-dropdown').value;
-      const selectedItem = availableItems.find(i => i.value === selectedValue);
-      const qty = parseInt(document.getElementById('item-qty').value) || 1;
-
-      const newRecord = {
-        quoteNo: assignedQuoteNo,
-        timestamp: new Date().toISOString(),
-        companyCode: comp.code,
-        companyName: comp.name,
-        validity: document.getElementById('quote-validity').value.trim() === '0' ? '-' : document.getElementById('quote-validity').value,
-        customer: {
-          name: document.getElementById('cust-name').value,
-          address: document.getElementById('cust-address').value
-        },
-        item: selectedItem,
-        quantity: qty,
-        totalAmount: selectedItem ? (selectedItem.price * qty) : 0
-      };
-
-      quotationRecords.push(newRecord);
-      localStorage.setItem('registered_quotation_serials', JSON.stringify(quotationRecords));
-
-      triggerJSONDownload(quotationRecords, `quotation_log_${comp.code}.json`);
-
-      const element = document.getElementById('quotation-paper');
-      const safeFileName = assignedQuoteNo.replace(/[\/\\]/g, '_');
-
-      const opt = {
-        margin: [5, 5, 5, 5],
-        filename: `${safeFileName}.pdf`,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, logging: false },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
+      label.textContent = "Mengunci No. Siri di Pelayan...";
 
       try {
+        // 1. Minta nombor siri rasmi yang unik dari Upstash Redis
+        const res = await fetch('/api/get-quote-no', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prefix: comp.prefix })
+        });
+
+        const data = await res.json();
+        if (!data.success) throw new Error(data.error || "Gagal menjana nombor siri");
+
+        const officialQuoteNo = data.quoteNo;
+
+        // 2. Kemaskini nombor siri rasmi ke atas dokumen paparan
+        document.getElementById('active-quote-no').textContent = officialQuoteNo;
+
+        label.textContent = "Menjana Dokumen PDF...";
+
+        // 3. Jana dan muat turun fail PDF
+        const element = document.getElementById('quotation-paper');
+        const safeFileName = officialQuoteNo.replace(/[\/\\]/g, '_');
+
+        const opt = {
+          margin: [5, 5, 5, 5],
+          filename: `${safeFileName}.pdf`,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true, logging: false },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
         await html2pdf().set(opt).from(element).save();
+
       } catch (err) {
-        console.error("Ralat janaan PDF:", err);
+        alert("Ralat semasa memproses sebut harga: " + err.message);
       } finally {
-        updateDashboardStats();
-        renderQuotation();
         btn.disabled = false;
-        label.textContent = "Kunci Siri, Simpan Fail & Muat Turun PDF";
+        label.textContent = "Kunci No. Siri & Muat Turun PDF";
+        renderQuotation(); // Kemaskini semula paparan
       }
     }
 
-    function triggerJSONDownload(data, filename) {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data, null, 2));
-      const anchor = document.createElement('a');
-      anchor.setAttribute("href", dataStr);
-      anchor.setAttribute("download", filename);
-      document.body.appendChild(anchor);
-      anchor.click();
-      anchor.remove();
-    }
-
-    function downloadRecordsJSON() {
-      triggerJSONDownload(quotationRecords, `arkib_sebutharga_${new Date().toISOString().slice(0,10)}.json`);
-    }
-
-    // Pendengar input
+    // Pendengar acara borang input
     document.getElementById('item-dropdown').addEventListener('change', renderQuotation);
     document.getElementById('item-qty').addEventListener('input', renderQuotation);
     document.getElementById('cust-name').addEventListener('input', renderQuotation);
     document.getElementById('cust-address').addEventListener('input', renderQuotation);
     document.getElementById('quote-validity').addEventListener('input', renderQuotation);
 
-    // Semakan auth semasa halaman dimuat
+    // Semak pengesahan PIN semasa mula dibuka
     window.onload = checkAuthOnLoad;
   </script>
 </body>
