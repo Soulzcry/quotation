@@ -18,6 +18,18 @@
     .font-mzr-body { font-family: 'Lora', serif; }
     .font-alt { font-family: 'Plus Jakarta Sans', sans-serif; }
 
+    /* Penguncian saiz A4 mutlak untuk elak terpotong */
+    .a4-container {
+      width: 794px !important;
+      min-width: 794px !important;
+      max-width: 794px !important;
+      height: 1120px !important;
+      min-height: 1120px !important;
+      max-height: 1120px !important;
+      box-sizing: border-box !important;
+      overflow: hidden !important;
+    }
+
     @media print {
       body * {
         visibility: hidden;
@@ -29,7 +41,8 @@
         position: absolute;
         left: 0;
         top: 0;
-        width: 100%;
+        width: 794px;
+        height: 1120px;
         margin: 0;
         padding: 0;
         box-shadow: none;
@@ -144,7 +157,7 @@
             <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
               Tempoh Sah <span class="text-[10px] text-slate-400 font-normal">(0 = "-")</span>
             </label>
-            <input type="text" id="quote-validity" value="0" placeholder="cth: 30 Hari atau 0"
+            <input type="text" id="quote-validity" value="30 Hari" placeholder="cth: 30 Hari atau 0"
               class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-slate-400 outline-none text-sm" />
           </div>
         </div>
@@ -160,14 +173,14 @@
           </button>
 
           <p class="text-[11px] text-slate-400 text-center leading-relaxed">
-            * Nombor siri dikunci dan dinaikkan secara automatik di pelayan cloud sebelum dokumen PDF dijana.
+            * Nombor siri dikunci dan dinaikkan secara automatik di Upstash Redis sebelum dokumen PDF dijana.
           </p>
         </div>
       </div>
 
       <!-- BAHAGIAN KERTAS DOKUMEN (KANAN) -->
-      <div class="lg:col-span-8 flex justify-center">
-        <div id="quotation-paper" class="bg-white w-full max-w-[820px] rounded-xl shadow-xl min-h-[1050px] border border-slate-200 overflow-hidden flex flex-col justify-between">
+      <div class="lg:col-span-8 flex justify-center items-start overflow-x-auto">
+        <div id="quotation-paper" class="a4-container bg-white shadow-xl flex flex-col justify-between">
           <!-- Disuntik secara dinamik oleh renderQuotation() -->
         </div>
       </div>
@@ -263,7 +276,7 @@
         if (!response.ok) throw new Error("Gagal load item.json");
         availableItems = await response.json();
       } catch (err) {
-        console.warn("Menggunakan data sementara kerana item.json belum sedia:", err);
+        console.warn("Menggunakan data fallback sementara:", err);
         availableItems = [
           {
             "value": "OPT-001",
@@ -282,32 +295,19 @@
             }
           },
           {
-            "value": "OPT-006",
-            "label": "Kombo: ASUS Zenbook 14 OLED + Brother DCP-T420W - RM5,050",
-            "type": "combo",
-            "price": 5050.00,
-            "laptop": {
-              "brand": "ASUS",
-              "model": "Zenbook 14 OLED (UX3405)",
-              "price": 4500.00,
-              "specs": {
-                "cpu": "Intel Core Ultra 5 125H",
-                "ram": "16GB LPDDR5X",
-                "gpu": "Intel Arc Graphics",
-                "storage": "1TB NVMe PCIe SSD",
-                "display": "14.0\" 3K OLED 120Hz",
-                "os": "Windows 11 Home"
-              }
-            },
-            "printer": {
-              "brand": "Brother",
-              "model": "DCP-T420W",
-              "price": 550.00,
-              "specs": {
-                "type": "All-in-One Ink Tank System",
-                "functions": "Print, Scan, Copy",
-                "connectivity": "USB 2.0, Wi-Fi Direct"
-              }
+            "value": "OPT-003",
+            "label": "ASUS TUF Gaming F15 [Core i7, 16GB, 1TB SSD, RTX 4060] - RM5,099",
+            "type": "laptop_only",
+            "brand": "ASUS",
+            "model": "TUF Gaming F15 (FX507)",
+            "price": 5099.00,
+            "specs": {
+              "cpu": "Intel Core i7-13620H (10-Core)",
+              "ram": "16GB DDR5-5200MHz",
+              "gpu": "NVIDIA GeForce RTX 4060 8GB GDDR6",
+              "storage": "1TB M.2 NVMe PCIe 4.0 SSD",
+              "display": "15.6\" FHD 144Hz IPS",
+              "os": "Windows 11 Home"
             }
           }
         ];
@@ -364,51 +364,55 @@
       const subtotal = item ? item.price * qty : 0;
 
       if (currentCompany === 'MZR') {
-        // TEMPLAT 1: MIRZAQUAN RESOURCES (Tradisional / Klasik)
-        paper.className = "bg-[#fffdfa] w-full max-w-[820px] p-10 md:p-12 min-h-[1050px] border border-stone-300 font-mzr-body text-stone-900 flex flex-col justify-between shadow-md";
+        // TEMPLAT 1: MIRZAQUAN RESOURCES (Tradisional Klasik)
+        paper.className = "a4-container bg-[#fffdfa] p-8 font-mzr-body text-stone-900 flex flex-col justify-between shadow-md";
         paper.innerHTML = `
           <div>
-            <div class="flex justify-between items-center pb-5 border-b-4 border-double border-emerald-900">
-              <div class="space-y-1 max-w-[65%]">
-                <h2 class="text-2xl font-bold font-mzr-title tracking-wide text-emerald-950">${comp.name}</h2>
-                <p class="text-[12px] text-stone-700 leading-tight whitespace-pre-line">${comp.address}</p>
-                <p class="text-xs font-semibold text-emerald-900 pt-1">Tel: ${comp.tel}</p>
+            <!-- Header MZR -->
+            <div class="flex justify-between items-center pb-4 border-b-4 border-double border-emerald-900">
+              <div class="space-y-0.5 max-w-[65%]">
+                <h2 class="text-xl font-bold font-mzr-title tracking-wide text-emerald-950 leading-tight">${comp.name}</h2>
+                <p class="text-[11px] text-stone-700 leading-tight whitespace-pre-line">${comp.address}</p>
+                <p class="text-[11px] font-semibold text-emerald-900 pt-0.5">Tel: ${comp.tel}</p>
               </div>
-              <div class="w-28 h-24 flex items-center justify-center p-1 bg-white border border-stone-300">
+              <div class="w-24 h-20 flex items-center justify-center p-1 bg-white border border-stone-300">
                 <img src="${comp.logo}" alt="MZR" class="max-h-full max-w-full object-contain" onerror="this.onerror=null; this.src='https://placehold.co/120x80?text=MZR+LOGO';" />
               </div>
             </div>
 
-            <div class="text-center my-6">
-              <h3 class="font-mzr-title text-xl font-bold tracking-widest uppercase underline decoration-emerald-800 decoration-1 underline-offset-4 text-stone-900">
+            <!-- Tajuk Dokumen -->
+            <div class="text-center my-4">
+              <h3 class="font-mzr-title text-base font-bold tracking-widest uppercase underline decoration-emerald-800 decoration-1 underline-offset-4 text-stone-900">
                 SEBUT HARGA RASMI
               </h3>
             </div>
 
-            <div class="grid grid-cols-2 gap-4 text-xs mb-6">
-              <div class="border border-stone-400 p-3 bg-stone-50/50">
-                <p class="text-[11px] font-bold uppercase text-stone-600 tracking-wider">Kepada Pihak:</p>
-                <p class="font-bold text-sm text-stone-950 mt-1">${custName}</p>
-                <p class="text-stone-700 whitespace-pre-line mt-1">${custAddress}</p>
+            <!-- Metadata Petak -->
+            <div class="grid grid-cols-2 gap-3 text-[11px] mb-4">
+              <div class="border border-stone-400 p-2.5 bg-stone-50/50">
+                <p class="text-[10px] font-bold uppercase text-stone-600 tracking-wider">Kepada Pihak:</p>
+                <p class="font-bold text-xs text-stone-950 mt-0.5">${custName}</p>
+                <p class="text-stone-700 whitespace-pre-line mt-0.5 leading-snug">${custAddress}</p>
               </div>
-              <div class="border border-stone-400 p-3 bg-stone-50/50 flex flex-col justify-between">
-                <div class="space-y-1">
-                  <div class="flex justify-between"><span class="text-stone-600">No. Sebut Harga:</span> <span class="font-mono font-bold text-emerald-950 text-sm" id="active-quote-no">${placeholderNo}</span></div>
+              <div class="border border-stone-400 p-2.5 bg-stone-50/50 flex flex-col justify-between">
+                <div class="space-y-0.5">
+                  <div class="flex justify-between"><span class="text-stone-600">No. Sebut Harga:</span> <span class="font-mono font-bold text-emerald-950 text-xs" id="active-quote-no">${placeholderNo}</span></div>
                   <div class="flex justify-between"><span class="text-stone-600">Tarikh Dikeluarkan:</span> <span>${today}</span></div>
                   <div class="flex justify-between"><span class="text-stone-600">Tempoh Sah:</span> <span class="font-semibold text-stone-900">${validityText}</span></div>
                 </div>
-                <div class="text-right text-[10px] text-stone-500 italic mt-2">Matawang: Ringgit Malaysia (MYR)</div>
+                <div class="text-right text-[9px] text-stone-500 italic mt-1">Matawang: Ringgit Malaysia (MYR)</div>
               </div>
             </div>
 
-            <table class="w-full text-xs border-collapse border border-stone-400">
+            <!-- Jadual Item -->
+            <table class="w-full text-[11px] border-collapse border border-stone-400">
               <thead>
                 <tr class="bg-emerald-950 text-white font-semibold">
-                  <th class="border border-stone-400 p-2.5 text-center w-12">BIL</th>
-                  <th class="border border-stone-400 p-2.5 text-left">PERIHAL BARANGAN / SPESIFIKASI</th>
-                  <th class="border border-stone-400 p-2.5 text-center w-16">KUANTITI</th>
-                  <th class="border border-stone-400 p-2.5 text-right w-28">HARGA SEUNIT (RM)</th>
-                  <th class="border border-stone-400 p-2.5 text-right w-28">JUMLAH (RM)</th>
+                  <th class="border border-stone-400 p-2 text-center w-10">BIL</th>
+                  <th class="border border-stone-400 p-2 text-left">PERIHAL BARANGAN / SPESIFIKASI</th>
+                  <th class="border border-stone-400 p-2 text-center w-14">KUANTITI</th>
+                  <th class="border border-stone-400 p-2 text-right w-24">HARGA SEUNIT (RM)</th>
+                  <th class="border border-stone-400 p-2 text-right w-24">JUMLAH (RM)</th>
                 </tr>
               </thead>
               <tbody>
@@ -417,87 +421,91 @@
             </table>
           </div>
 
-          <div class="mt-8 pt-4">
-            <div class="flex justify-end mb-8">
-              <table class="w-64 text-xs border border-stone-400">
+          <!-- Bahagian Bawah / Ringkasan & Signoff -->
+          <div class="pt-2">
+            <div class="flex justify-end mb-4">
+              <table class="w-56 text-[11px] border border-stone-400">
                 <tr>
-                  <td class="p-2 bg-stone-100 font-semibold border-b border-stone-300">Jumlah Kasar:</td>
-                  <td class="p-2 text-right border-b border-stone-300">RM ${subtotal.toLocaleString('en-MY', { minimumFractionDigits: 2 })}</td>
+                  <td class="p-1.5 bg-stone-100 font-semibold border-b border-stone-300">Jumlah Kasar:</td>
+                  <td class="p-1.5 text-right border-b border-stone-300">RM ${subtotal.toLocaleString('en-MY', { minimumFractionDigits: 2 })}</td>
                 </tr>
                 <tr>
-                  <td class="p-2 bg-stone-100 font-semibold border-b border-stone-300">Cukai (0%):</td>
-                  <td class="p-2 text-right border-b border-stone-300">RM 0.00</td>
+                  <td class="p-1.5 bg-stone-100 font-semibold border-b border-stone-300">Cukai (0%):</td>
+                  <td class="p-1.5 text-right border-b border-stone-300">RM 0.00</td>
                 </tr>
-                <tr class="bg-emerald-900 text-white font-bold text-sm">
-                  <td class="p-2.5">JUMLAH BESAR:</td>
-                  <td class="p-2.5 text-right">RM ${subtotal.toLocaleString('en-MY', { minimumFractionDigits: 2 })}</td>
+                <tr class="bg-emerald-900 text-white font-bold text-xs">
+                  <td class="p-2">JUMLAH BESAR:</td>
+                  <td class="p-2 text-right">RM ${subtotal.toLocaleString('en-MY', { minimumFractionDigits: 2 })}</td>
                 </tr>
               </table>
             </div>
 
-            <div class="grid grid-cols-2 gap-8 text-xs border-t border-stone-300 pt-6">
-              <div class="text-[11px] text-stone-600 space-y-1">
+            <div class="grid grid-cols-2 gap-6 text-[10px] border-t border-stone-300 pt-3">
+              <div class="text-stone-600 space-y-0.5 leading-snug">
                 <p class="font-bold text-stone-800 underline">SYARAT & TERMA:</p>
-                <p>1. Bayaran cek/pindahan bank kepada akaun: <b>MIRZAQUAN RESOURCES</b>.</p>
-                <p>2. Penghantaran dalam tempoh 7-14 hari bekerja dari tarikh pesanan disahkan.</p>
+                <p>1. Bayaran cek/pindahan bank kepada: <b>MIRZAQUAN RESOURCES</b>.</p>
+                <p>2. Penghantaran dalam tempoh 7-14 hari bekerja dari tarikh PO.</p>
               </div>
               <div class="text-center">
-                <p class="text-[11px] text-stone-500 mb-12">Disediakan dan disahkan oleh,</p>
-                <div class="border-b border-stone-800 w-48 mx-auto"></div>
-                <p class="font-bold text-stone-900 mt-1 uppercase text-[11px]">Pegawai Bertanggungjawab</p>
-                <p class="text-[10px] text-stone-500">${comp.name}</p>
+                <p class="text-stone-500 mb-8">Disediakan dan disahkan oleh,</p>
+                <div class="border-b border-stone-800 w-40 mx-auto"></div>
+                <p class="font-bold text-stone-900 mt-0.5 uppercase text-[10px]">Pegawai Bertanggungjawab</p>
+                <p class="text-[9px] text-stone-500">${comp.name}</p>
               </div>
             </div>
           </div>
         `;
       } else {
-        // TEMPLAT 2: AXIS LOGISTICS TECHNOLOGIES (Modern Tech)
-        paper.className = "bg-white w-full max-w-[820px] min-h-[1050px] font-alt text-slate-800 flex flex-col justify-between shadow-xl";
+        // TEMPLAT 2: AXIS LOGISTICS TECHNOLOGIES (Modern Tech Minimalis)
+        paper.className = "a4-container bg-white font-alt text-slate-800 flex flex-col justify-between shadow-xl";
         paper.innerHTML = `
           <div>
-            <div class="bg-slate-900 text-white p-8 md:p-10 flex justify-between items-center">
-              <div class="flex items-center gap-4">
-                <div class="w-16 h-16 bg-white p-1.5 rounded-lg flex items-center justify-center">
+            <!-- Banner Atas -->
+            <div class="bg-slate-900 text-white p-6 flex justify-between items-center">
+              <div class="flex items-center gap-3">
+                <div class="w-14 h-14 bg-white p-1 rounded-lg flex items-center justify-center">
                   <img src="${comp.logo}" alt="ALT" class="max-h-full max-w-full object-contain" onerror="this.onerror=null; this.src='https://placehold.co/100x100?text=ALT';" />
                 </div>
                 <div>
-                  <h2 class="text-lg font-black tracking-wider uppercase text-blue-400">${comp.name}</h2>
-                  <p class="text-[11px] text-slate-300 max-w-sm whitespace-pre-line leading-relaxed">${comp.address}</p>
-                  <p class="text-xs text-slate-400 font-mono mt-0.5">T: ${comp.tel}</p>
+                  <h2 class="text-base font-black tracking-wider uppercase text-blue-400">${comp.name}</h2>
+                  <p class="text-[10px] text-slate-300 max-w-xs whitespace-pre-line leading-tight">${comp.address}</p>
+                  <p class="text-[10px] text-slate-400 font-mono mt-0.5">T: ${comp.tel}</p>
                 </div>
               </div>
               <div class="text-right">
-                <span class="text-3xl font-black tracking-widest text-slate-100">QUOTATION</span>
-                <p class="text-xs font-mono text-blue-400 mt-1" id="active-quote-no">${placeholderNo}</p>
+                <span class="text-2xl font-black tracking-widest text-slate-100">QUOTATION</span>
+                <p class="text-[11px] font-mono text-blue-400 mt-0.5" id="active-quote-no">${placeholderNo}</p>
               </div>
             </div>
 
-            <div class="p-8 md:p-10 pb-0">
-              <div class="flex justify-between items-start border-b border-slate-200 pb-6 mb-6">
+            <div class="p-6 pb-0">
+              <!-- Bar Penerima -->
+              <div class="flex justify-between items-start border-b border-slate-200 pb-4 mb-4">
                 <div>
-                  <span class="text-[10px] font-extrabold uppercase tracking-widest text-blue-600">DISEDIAKAN UNTUK</span>
-                  <h4 class="text-base font-bold text-slate-900 mt-1">${custName}</h4>
-                  <p class="text-xs text-slate-500 whitespace-pre-line mt-1 max-w-md">${custAddress}</p>
+                  <span class="text-[9px] font-extrabold uppercase tracking-widest text-blue-600">DISEDIAKAN UNTUK</span>
+                  <h4 class="text-sm font-bold text-slate-900 mt-0.5">${custName}</h4>
+                  <p class="text-[11px] text-slate-500 whitespace-pre-line mt-0.5 max-w-sm leading-snug">${custAddress}</p>
                 </div>
-                <div class="text-right space-y-1 text-xs">
+                <div class="text-right space-y-1 text-[11px]">
                   <div>
-                    <span class="text-slate-400 text-[11px] block">TARIKH</span>
+                    <span class="text-slate-400 text-[10px] block">TARIKH</span>
                     <span class="font-bold text-slate-800">${today}</span>
                   </div>
-                  <div class="pt-2">
-                    <span class="text-slate-400 text-[11px] block">TEMPOH SAH</span>
-                    <span class="inline-block px-2.5 py-0.5 bg-slate-100 text-slate-800 font-bold rounded text-xs font-mono">${validityText}</span>
+                  <div class="pt-1">
+                    <span class="text-slate-400 text-[10px] block">TEMPOH SAH</span>
+                    <span class="inline-block px-2 py-0.5 bg-slate-100 text-slate-800 font-bold rounded text-[10px] font-mono">${validityText}</span>
                   </div>
                 </div>
               </div>
 
-              <table class="w-full text-xs">
+              <!-- Jadual Item -->
+              <table class="w-full text-[11px]">
                 <thead>
-                  <tr class="text-slate-400 text-[11px] font-bold border-b border-slate-200 uppercase tracking-wider">
-                    <th class="py-3 px-2 text-left">ITEM & DESKRIPSI SISTEM</th>
-                    <th class="py-3 px-2 text-center w-16">UNIT</th>
-                    <th class="py-3 px-2 text-right w-28">KADAR (RM)</th>
-                    <th class="py-3 px-2 text-right w-28">JUMLAH (RM)</th>
+                  <tr class="text-slate-400 text-[10px] font-bold border-b border-slate-200 uppercase tracking-wider">
+                    <th class="py-2 px-2 text-left">ITEM & DESKRIPSI SISTEM</th>
+                    <th class="py-2 px-2 text-center w-14">UNIT</th>
+                    <th class="py-2 px-2 text-right w-24">KADAR (RM)</th>
+                    <th class="py-2 px-2 text-right w-24">JUMLAH (RM)</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
@@ -507,9 +515,10 @@
             </div>
           </div>
 
-          <div class="p-8 md:p-10 pt-0">
-            <div class="flex justify-end pt-4 border-t border-slate-200">
-              <div class="w-72 space-y-2 text-xs">
+          <!-- Bahagian Bawah ALT -->
+          <div class="p-6 pt-0">
+            <div class="flex justify-end pt-2 border-t border-slate-200">
+              <div class="w-60 space-y-1.5 text-[11px]">
                 <div class="flex justify-between text-slate-500">
                   <span>Sub-Jumlah:</span>
                   <span class="font-mono">RM ${subtotal.toLocaleString('en-MY', { minimumFractionDigits: 2 })}</span>
@@ -518,21 +527,22 @@
                   <span>SST (0%):</span>
                   <span class="font-mono">RM 0.00</span>
                 </div>
-                <div class="flex justify-between items-center text-sm font-black text-slate-900 border-t border-slate-200 pt-2">
+                <div class="flex justify-between items-center text-xs font-black text-slate-900 border-t border-slate-200 pt-1.5">
                   <span>JUMLAH KESELURUHAN:</span>
-                  <span class="text-blue-700 text-base font-mono">RM ${subtotal.toLocaleString('en-MY', { minimumFractionDigits: 2 })}</span>
+                  <span class="text-blue-700 text-sm font-mono">RM ${subtotal.toLocaleString('en-MY', { minimumFractionDigits: 2 })}</span>
                 </div>
               </div>
             </div>
 
-            <div class="mt-12 pt-6 border-t border-slate-100 flex justify-between items-end text-[11px] text-slate-400">
-              <div class="space-y-1">
+            <!-- Footer Tanda Tangan -->
+            <div class="mt-6 pt-4 border-t border-slate-100 flex justify-between items-end text-[10px] text-slate-400">
+              <div class="space-y-0.5">
                 <p class="font-semibold text-slate-700">Terma Sistem Digital:</p>
                 <p>Dokumen ini dijana secara elektronik oleh sistem Axis Logistics Tech.</p>
                 <p>Sila kemukakan pesanan rasmi (PO) untuk pengesahan pembekalan.</p>
               </div>
               <div class="text-right">
-                <div class="w-40 border-b border-slate-300 mb-2"></div>
+                <div class="w-36 border-b border-slate-300 mb-1"></div>
                 <p class="font-medium text-slate-600">Pengesahan Wakil Syarikat</p>
               </div>
             </div>
@@ -548,10 +558,10 @@
       if (item.type === 'laptop_only') {
         return `
           <tr class="align-top bg-stone-50/30">
-            <td class="border border-stone-400 p-2.5 text-center font-bold">1</td>
-            <td class="border border-stone-400 p-2.5">
-              <p class="font-bold text-stone-950 text-sm">${item.brand} ${item.model}</p>
-              <div class="mt-1 text-[11px] text-stone-700 space-y-0.5 leading-relaxed font-sans">
+            <td class="border border-stone-400 p-2 text-center font-bold">1</td>
+            <td class="border border-stone-400 p-2">
+              <p class="font-bold text-stone-950 text-xs">${item.brand} ${item.model}</p>
+              <div class="mt-1 text-[10px] text-stone-700 space-y-0.5 leading-snug font-sans">
                 <p>• <b>Pemproses:</b> ${item.specs.cpu}</p>
                 <p>• <b>Memori (RAM):</b> ${item.specs.ram}</p>
                 <p>• <b>Storan Data:</b> ${item.specs.storage}</p>
@@ -560,31 +570,31 @@
                 <p>• <b>Sistem Operasi:</b> ${item.specs.os}</p>
               </div>
             </td>
-            <td class="border border-stone-400 p-2.5 text-center font-bold">${qty}</td>
-            <td class="border border-stone-400 p-2.5 text-right font-mono">${item.price.toFixed(2)}</td>
-            <td class="border border-stone-400 p-2.5 text-right font-mono font-bold">${total.toFixed(2)}</td>
+            <td class="border border-stone-400 p-2 text-center font-bold">${qty}</td>
+            <td class="border border-stone-400 p-2 text-right font-mono">${item.price.toFixed(2)}</td>
+            <td class="border border-stone-400 p-2 text-right font-mono font-bold">${total.toFixed(2)}</td>
           </tr>
         `;
       } else {
         return `
           <tr class="align-top bg-stone-50/30">
-            <td class="border border-stone-400 p-2.5 text-center font-bold">1</td>
-            <td class="border border-stone-400 p-2.5">
-              <p class="font-bold text-stone-950 text-sm">PAKEJ KOMBO: ${item.laptop.brand} + PENCETAK ${item.printer.brand}</p>
-              <div class="mt-2 text-[11px] text-stone-800 space-y-1.5 font-sans">
-                <div class="p-2 border border-stone-300 bg-white rounded">
+            <td class="border border-stone-400 p-2 text-center font-bold">1</td>
+            <td class="border border-stone-400 p-2">
+              <p class="font-bold text-stone-950 text-xs">PAKEJ KOMBO: ${item.laptop.brand} + PENCETAK ${item.printer.brand}</p>
+              <div class="mt-1 text-[10px] text-stone-800 space-y-1 font-sans">
+                <div class="p-1.5 border border-stone-300 bg-white rounded">
                   <p class="font-bold text-emerald-900">A. ${item.laptop.brand} ${item.laptop.model}</p>
-                  <p class="text-stone-600">${item.laptop.specs.cpu} | ${item.laptop.specs.ram} | ${item.laptop.specs.storage} | ${item.laptop.specs.display}</p>
+                  <p class="text-stone-600">${item.laptop.specs.cpu} | ${item.laptop.specs.ram} | ${item.laptop.specs.storage}</p>
                 </div>
-                <div class="p-2 border border-stone-300 bg-white rounded">
+                <div class="p-1.5 border border-stone-300 bg-white rounded">
                   <p class="font-bold text-emerald-900">B. Pencetak ${item.printer.brand} ${item.printer.model}</p>
-                  <p class="text-stone-600">${item.printer.specs.type} | Fungsi: ${item.printer.specs.functions} | ${item.printer.specs.connectivity}</p>
+                  <p class="text-stone-600">${item.printer.specs.type} | Fungsi: ${item.printer.specs.functions}</p>
                 </div>
               </div>
             </td>
-            <td class="border border-stone-400 p-2.5 text-center font-bold">${qty}</td>
-            <td class="border border-stone-400 p-2.5 text-right font-mono">${item.price.toFixed(2)}</td>
-            <td class="border border-stone-400 p-2.5 text-right font-mono font-bold">${total.toFixed(2)}</td>
+            <td class="border border-stone-400 p-2 text-center font-bold">${qty}</td>
+            <td class="border border-stone-400 p-2 text-right font-mono">${item.price.toFixed(2)}</td>
+            <td class="border border-stone-400 p-2 text-right font-mono font-bold">${total.toFixed(2)}</td>
           </tr>
         `;
       }
@@ -597,9 +607,9 @@
       if (item.type === 'laptop_only') {
         return `
           <tr class="align-top">
-            <td class="py-4 px-2">
-              <p class="font-bold text-slate-900 text-sm tracking-tight">${item.brand} ${item.model}</p>
-              <div class="mt-2 grid grid-cols-2 gap-x-4 gap-y-1 text-[11px] text-slate-500 font-medium">
+            <td class="py-3 px-2">
+              <p class="font-bold text-slate-900 text-xs tracking-tight">${item.brand} ${item.model}</p>
+              <div class="mt-1.5 grid grid-cols-2 gap-x-2 gap-y-0.5 text-[10px] text-slate-500 font-medium">
                 <div><span class="text-slate-400">Processor:</span> ${item.specs.cpu}</div>
                 <div><span class="text-slate-400">Memory:</span> ${item.specs.ram}</div>
                 <div><span class="text-slate-400">Storage:</span> ${item.specs.storage}</div>
@@ -608,30 +618,30 @@
                 <div><span class="text-slate-400">OS:</span> ${item.specs.os}</div>
               </div>
             </td>
-            <td class="py-4 px-2 text-center font-semibold text-slate-700">${qty}</td>
-            <td class="py-4 px-2 text-right font-mono text-slate-700">${item.price.toFixed(2)}</td>
-            <td class="py-4 px-2 text-right font-mono font-bold text-slate-900">${total.toFixed(2)}</td>
+            <td class="py-3 px-2 text-center font-semibold text-slate-700">${qty}</td>
+            <td class="py-3 px-2 text-right font-mono text-slate-700">${item.price.toFixed(2)}</td>
+            <td class="py-3 px-2 text-right font-mono font-bold text-slate-900">${total.toFixed(2)}</td>
           </tr>
         `;
       } else {
         return `
           <tr class="align-top">
-            <td class="py-4 px-2">
-              <p class="font-bold text-blue-900 text-sm tracking-tight">HARDWARE BUNDLE: ${item.laptop.model} + ${item.printer.model}</p>
-              <div class="mt-3 space-y-2 text-[11px]">
-                <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                  <span class="font-bold text-slate-800 block text-xs">Unit Utama: ${item.laptop.brand} ${item.laptop.model}</span>
-                  <span class="text-slate-500">${item.laptop.specs.cpu} • ${item.laptop.specs.ram} • ${item.laptop.specs.storage} • ${item.laptop.specs.display}</span>
+            <td class="py-3 px-2">
+              <p class="font-bold text-blue-900 text-xs tracking-tight">HARDWARE BUNDLE: ${item.laptop.model} + ${item.printer.model}</p>
+              <div class="mt-1.5 space-y-1 text-[10px]">
+                <div class="bg-slate-50 p-1.5 rounded border border-slate-100">
+                  <span class="font-bold text-slate-800 block text-[11px]">Unit Utama: ${item.laptop.brand} ${item.laptop.model}</span>
+                  <span class="text-slate-500">${item.laptop.specs.cpu} • ${item.laptop.specs.ram} • ${item.laptop.specs.storage}</span>
                 </div>
-                <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-100">
-                  <span class="font-bold text-slate-800 block text-xs">Perkakasan Tambahan: ${item.printer.brand} ${item.printer.model}</span>
-                  <span class="text-slate-500">${item.printer.specs.type} • ${item.printer.specs.functions} • ${item.printer.specs.connectivity}</span>
+                <div class="bg-slate-50 p-1.5 rounded border border-slate-100">
+                  <span class="font-bold text-slate-800 block text-[11px]">Perkakasan: ${item.printer.brand} ${item.printer.model}</span>
+                  <span class="text-slate-500">${item.printer.specs.type} • ${item.printer.specs.functions}</span>
                 </div>
               </div>
             </td>
-            <td class="py-4 px-2 text-center font-semibold text-slate-700">${qty}</td>
-            <td class="py-4 px-2 text-right font-mono text-slate-700">${item.price.toFixed(2)}</td>
-            <td class="py-4 px-2 text-right font-mono font-bold text-slate-900">${total.toFixed(2)}</td>
+            <td class="py-3 px-2 text-center font-semibold text-slate-700">${qty}</td>
+            <td class="py-3 px-2 text-right font-mono text-slate-700">${item.price.toFixed(2)}</td>
+            <td class="py-3 px-2 text-right font-mono font-bold text-slate-900">${total.toFixed(2)}</td>
           </tr>
         `;
       }
@@ -658,22 +668,31 @@
         if (!data.success) throw new Error(data.error || "Gagal menjana nombor siri");
 
         const officialQuoteNo = data.quoteNo;
-
-        // 2. Kemaskini nombor siri rasmi ke atas dokumen paparan
         document.getElementById('active-quote-no').textContent = officialQuoteNo;
 
         label.textContent = "Menjana Dokumen PDF...";
 
-        // 3. Jana dan muat turun fail PDF
+        // 2. Jana dan muat turun fail PDF (Tetapan skala tetap A4)
         const element = document.getElementById('quotation-paper');
         const safeFileName = officialQuoteNo.replace(/[\/\\]/g, '_');
 
         const opt = {
-          margin: [5, 5, 5, 5],
+          margin: 0,
           filename: `${safeFileName}.pdf`,
           image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2, useCORS: true, logging: false },
-          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+          html2canvas: {
+            scale: 2,
+            useCORS: true,
+            logging: false,
+            scrollY: 0,
+            windowWidth: 794
+          },
+          jsPDF: {
+            unit: 'px',
+            format: [794, 1120],
+            orientation: 'portrait',
+            hotfixes: ['px_scaling']
+          }
         };
 
         await html2pdf().set(opt).from(element).save();
@@ -683,7 +702,7 @@
       } finally {
         btn.disabled = false;
         label.textContent = "Kunci No. Siri & Muat Turun PDF";
-        renderQuotation(); // Kemaskini semula paparan
+        renderQuotation();
       }
     }
 
