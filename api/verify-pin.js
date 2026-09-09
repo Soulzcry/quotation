@@ -1,5 +1,4 @@
 export default function handler(req, res) {
-  // Hanya benarkan kaedah POST
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Kaedah tidak dibenarkan' });
   }
@@ -8,11 +7,13 @@ export default function handler(req, res) {
   const correctPin = process.env.PIN_KEY;
 
   if (!correctPin) {
-    return res.status(500).json({ success: false, message: 'Ralat pelayan: PIN_KEY belum ditetapkan dalam persekitaran .env' });
+    return res.status(500).json({
+      success: false,
+      message: 'PIN_KEY belum dikonfigurasikan di Environment Variables.'
+    });
   }
 
   if (String(pin).trim() === String(correctPin).trim()) {
-    // Jana token sesi ringkas
     const sessionToken = Buffer.from(`session_auth_${Date.now()}`).toString('base64');
     return res.status(200).json({ success: true, token: sessionToken });
   }

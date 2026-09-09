@@ -6,23 +6,23 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Upstash belum disambungkan' });
   }
 
-  // A. SIMPAN SEBUT HARGA (POST)
+  // A. SIMPAN DOKUMEN / SEBUT HARGA
   if (req.method === 'POST') {
     const quotationData = req.body;
     const { quoteNo } = quotationData;
 
-    if (!quoteNo) return res.status(400).json({ error: 'No sebut harga tiada' });
+    if (!quoteNo) return res.status(400).json({ error: 'Nombor rujukan tiada' });
 
     try {
-      // 1. Simpan rekod penuh
+      // 1. Simpan payload penuh dokumen
       await fetch(`${url}/set/quote:${encodeURIComponent(quoteNo)}`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: JSON.stringify(quotationData)
       });
 
-      // 2. Tambah ke senarai indeks untuk dropdown (LPUSH)
-      await fetch(`${url}/lpush/quote_index/${encodeURIComponent(quotationData.companyCode)}`, {
+      // 2. Tambah ke senarai indeks carian syarikat
+      await fetch(`${url}/lpush/quote_index:${encodeURIComponent(quotationData.companyCode)}`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${token}` },
         body: JSON.stringify({
@@ -38,21 +38,22 @@ export default async function handler(req, res) {
     }
   }
 
-  // B. AMBIL SENARAI SEBUT HARGA (GET)
+  // B. AMBIL REKOD DOKUMEN / SENARAI DROPDOWN
   if (req.method === 'GET') {
     const { companyCode, quoteNo } = req.query;
 
     try {
-      // Jika minta 1 sebut harga spesifik:
+      // Dapatkan 1 rekod khusus
       if (quoteNo) {
         const response = await fetch(`${url}/get/quote:${encodeURIComponent(quoteNo)}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         const data = await response.json();
-        return res.status(200).json({ success: true, data: JSON.parse(data.result) });
+        const parsed = typeof data.result === 'string' ? JSON.parse(data.result) : data.result;
+        return res.status(200).json({ success: true, data: parsed });
       }
 
-      // Jika minta senarai indeks sebut harga:
+      // Dapatkan senarai indeks bagi syarikat
       const response = await fetch(`${url}/lrange/quote_index:${encodeURIComponent(companyCode)}/0/50`, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -64,5 +65,5 @@ export default async function handler(req, res) {
     }
   }
 
-  return res.status(405).end();
+  return res.status(405).json({ message: 'Kaedah tidak dibenarkan' });
 }

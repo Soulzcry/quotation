@@ -1,37 +1,23 @@
 <!DOCTYPE html>
 <html lang="ms">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sistem Dokumen Korporat - Sebut Harga, DO, Invois & Resit</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Cinzel, Lora, Plus Jakarta Sans, Space Mono -->
+  <!-- Google Fonts: Cinzel, Lora, Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap"
-    rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <!-- html2pdf.js CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <style>
-    .font-mzr-title {
-      font-family: 'Cinzel', serif;
-    }
-
-    .font-mzr-body {
-      font-family: 'Lora', serif;
-    }
-
-    .font-alt {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-
-    .font-receipt {
-      font-family: 'Space Mono', monospace, courier;
-    }
+    .font-mzr-title { font-family: 'Cinzel', serif; }
+    .font-mzr-body { font-family: 'Lora', serif; }
+    .font-alt { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-receipt { font-family: 'Space Mono', monospace, courier; }
 
     /* Saiz A4 standard */
     .a4-container {
@@ -54,12 +40,9 @@
       body * {
         visibility: hidden;
       }
-
-      #quotation-paper,
-      #quotation-paper * {
+      #quotation-paper, #quotation-paper * {
         visibility: visible;
       }
-
       #quotation-paper {
         position: absolute;
         left: 0;
@@ -72,7 +55,6 @@
     }
   </style>
 </head>
-
 <body class="bg-slate-100 text-slate-800 min-h-screen font-sans">
 
   <!-- ================= 1. SKRIN PENGESAHAN PIN ================= -->
@@ -80,9 +62,7 @@
     <div class="bg-white max-w-sm w-full rounded-2xl p-6 shadow-2xl border border-slate-200 text-center space-y-5">
       <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto">
         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
-          </path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
         </svg>
       </div>
 
@@ -94,8 +74,7 @@
       <form onsubmit="handlePinSubmit(event)" class="space-y-4">
         <div>
           <input type="password" id="input-pin" inputmode="numeric" placeholder="Masukkan PIN" maxlength="12"
-            class="w-full text-center tracking-[0.3em] font-mono text-xl py-3 px-4 border-2 border-slate-200 rounded-xl focus:border-blue-600 outline-none transition"
-            required autofocus />
+            class="w-full text-center tracking-[0.3em] font-mono text-xl py-3 px-4 border-2 border-slate-200 rounded-xl focus:border-blue-600 outline-none transition" required autofocus />
           <p id="pin-error-msg" class="text-xs text-red-600 mt-2 hidden"></p>
         </div>
 
@@ -115,8 +94,7 @@
         <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
         <span class="text-xs font-semibold text-slate-600">Sistem Dokumen Perniagaan Cloud Aktif</span>
       </div>
-      <button onclick="handleLogout()"
-        class="text-xs font-medium text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 py-1.5 px-3 rounded-lg transition">
+      <button onclick="handleLogout()" class="text-xs font-medium text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 py-1.5 px-3 rounded-lg transition">
         Log Keluar
       </button>
     </div>
@@ -132,8 +110,7 @@
 
         <!-- Pemilihan Syarikat -->
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Entiti
-            Perniagaan</label>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Entiti Perniagaan</label>
           <div class="grid grid-cols-1 gap-2">
             <button type="button" id="btn-comp-mzr" onclick="setCompany('MZR')"
               class="p-2.5 border-2 rounded-xl text-left transition-all border-emerald-700 bg-emerald-50 text-emerald-950 font-semibold flex items-center justify-between">
@@ -159,15 +136,10 @@
         <div>
           <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Jenis Dokumen</label>
           <div class="grid grid-cols-4 gap-1.5">
-            <button type="button" onclick="setDocType('QUOT')" id="btn-doc-quot"
-              class="py-2 text-xs font-bold rounded-lg border-2 border-slate-900 bg-slate-900 text-white transition text-center">Quot</button>
-            <button type="button" onclick="setDocType('DO')" id="btn-doc-do"
-              class="py-2 text-xs font-bold rounded-lg border-2 border-slate-200 text-slate-700 hover:border-slate-300 transition text-center">D.O.</button>
-            <button type="button" onclick="setDocType('INV')" id="btn-doc-inv"
-              class="py-2 text-xs font-bold rounded-lg border-2 border-slate-200 text-slate-700 hover:border-slate-300 transition text-center">Invois</button>
-            <button type="button" onclick="setDocType('REC')" id="btn-doc-rec"
-              class="py-2 text-xs font-bold rounded-lg border-2 border-slate-200 text-slate-700 hover:border-slate-300 transition text-center">Resit
-              🖨️</button>
+            <button type="button" onclick="setDocType('QUOT')" id="btn-doc-quot" class="py-2 text-xs font-bold rounded-lg border-2 border-slate-900 bg-slate-900 text-white transition text-center">Quot</button>
+            <button type="button" onclick="setDocType('DO')" id="btn-doc-do" class="py-2 text-xs font-bold rounded-lg border-2 border-slate-200 text-slate-700 hover:border-slate-300 transition text-center">D.O.</button>
+            <button type="button" onclick="setDocType('INV')" id="btn-doc-inv" class="py-2 text-xs font-bold rounded-lg border-2 border-slate-200 text-slate-700 hover:border-slate-300 transition text-center">Invois</button>
+            <button type="button" onclick="setDocType('REC')" id="btn-doc-rec" class="py-2 text-xs font-bold rounded-lg border-2 border-slate-200 text-slate-700 hover:border-slate-300 transition text-center">Resit 🖨️</button>
           </div>
         </div>
 
@@ -182,11 +154,9 @@
         <div id="section-load-quote" class="hidden p-3 bg-blue-50 border border-blue-200 rounded-xl space-y-1.5">
           <label class="block text-xs font-bold text-blue-950 flex items-center justify-between">
             <span>Tarik Data Sebut Harga:</span>
-            <button type="button" onclick="fetchSavedQuotations()"
-              class="text-[10px] text-blue-600 hover:underline font-normal">Segarkan</button>
+            <button type="button" onclick="fetchSavedQuotations()" class="text-[10px] text-blue-600 hover:underline font-normal">Segarkan</button>
           </label>
-          <select id="saved-quote-dropdown" onchange="loadQuotationToForm(this.value)"
-            class="w-full text-xs p-2 rounded-lg border border-blue-300 bg-white outline-none">
+          <select id="saved-quote-dropdown" onchange="loadQuotationToForm(this.value)" class="w-full text-xs p-2 rounded-lg border border-blue-300 bg-white outline-none">
             <option value="">-- Sedang memuatkan senarai... --</option>
           </select>
           <p class="text-[10px] text-blue-700">Pilih pelanggan untuk mengisi semula butiran automatik.</p>
@@ -194,8 +164,7 @@
 
         <!-- Maklumat Penerima -->
         <div class="space-y-2">
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Maklumat Pelanggan /
-            Klien</label>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Maklumat Pelanggan / Klien</label>
           <input type="text" id="cust-name" placeholder="Nama Syarikat / Jabatan"
             class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-slate-400 outline-none text-sm"
             value="Bahagian Pengurusan Teknologi Maklumat" />
@@ -205,10 +174,8 @@
 
         <!-- Dropdown Item dari item.json -->
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Pilihan Item /
-            Kombo</label>
-          <select id="item-dropdown"
-            class="w-full px-3 py-2.5 border rounded-lg focus:ring-2 focus:ring-slate-400 outline-none text-xs bg-white font-medium">
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Pilihan Item / Kombo</label>
+          <select id="item-dropdown" class="w-full px-3 py-2.5 border rounded-lg focus:ring-2 focus:ring-slate-400 outline-none text-xs bg-white font-medium">
             <option value="">Memuatkan senarai item.json...</option>
           </select>
         </div>
@@ -234,8 +201,7 @@
           <button id="btn-download" onclick="executeDocumentWorkflow()"
             class="w-full bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-bold py-3.5 px-4 rounded-xl transition text-sm shadow flex items-center justify-center gap-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
             </svg>
             <span id="btn-label">Kunci No. Siri & Muat Turun Dokumen</span>
           </button>
@@ -324,9 +290,10 @@
       MZR: {
         code: "MZR",
         name: "MIRZAQUAN RESOURCES",
-        address: "LOT 2130-19 JALAN CHANGKAT, SIMPANG 3 GOMBAK,\n53100 KUALA LUMPUR, SELANGOR.",
+        address: "LOT 2130-19 JALAN CHANGKAT, SIMPANG 3 GOMBAK,
+53100 KUALA LUMPUR, SELANGOR.",
         tel: "013-306 4618",
-        bank: "MAYBANK: 5642-7654-1234 (Mirzaquan Resources)",
+        bank: "CIMB BANK: 8603050677 (Mirzaquan Resources)",
         logo: "logoMZR.png",
         prefixes: {
           QUOT: "MZR/QT",
@@ -338,9 +305,11 @@
       ALT: {
         code: "ALT",
         name: "AXIS LOGISTICS TECHNOLOGIES",
-        address: "B-3A-22, PUSAT DAGANGAN PELANGI,\nPELANGI DAMANSARA PJU 6,\n47800 PETALING JAYA, SELANGOR, MALAYSIA.",
+        address: "B-3A-22, PUSAT DAGANGAN PELANGI,
+PELANGI DAMANSARA PJU 6,
+47800 PETALING JAYA, SELANGOR, MALAYSIA.",
         tel: "03-83290277",
-        bank: "CIMB BANK: 8603-4567-8901 (Axis Logistics Technologies)",
+        bank: "MAYBANK: 566010859912 (Axis Logistics Technologies)",
         logo: "logoALT.png",
         prefixes: {
           QUOT: "ALT/EST",
@@ -557,181 +526,68 @@
 
       // ================= JIKA MOD RESIT BLUETOOTH THERMAL (80MM) =================
       if (currentDocType === 'REC') {
-        let itemTitle = "Item";
-        let itemSpecsText = "";
-        if (item) {
-          if (item.type === 'laptop_only') {
-            itemTitle = `${item.brand} ${item.model}`;
-            if (item.specs) {
-              itemSpecsText = `${item.specs.cpu || ''} • ${item.specs.ram || ''} • ${item.specs.storage || ''}`;
-            }
-          } else {
-            itemTitle = `KOMBO: ${item.laptop ? item.laptop.model : 'Laptop'} + ${item.printer ? item.printer.model : 'Printer'}`;
-            if (item.laptop && item.printer) {
-              itemSpecsText = `${item.laptop.specs ? item.laptop.specs.cpu : ''} • Perkakasan: ${item.printer.brand || ''} ${item.printer.model || ''}`;
-            }
-          }
-        }
+        paper.className = "receipt-container bg-white font-receipt text-slate-900 p-4 shadow-xl border border-slate-300 rounded text-xs leading-tight";
+        paper.innerHTML = `
+          <div class="text-center pb-2 border-b border-dashed border-slate-400">
+            <div class="w-12 h-12 mx-auto mb-1 flex items-center justify-center">
+              <img src="${comp.logo}" alt="Logo" class="max-h-full max-w-full object-contain" onerror="this.style.display='none'" />
+            </div>
+            <h2 class="text-sm font-bold uppercase tracking-wider">${comp.name}</h2>
+            <p class="text-[10px] text-slate-600 whitespace-pre-line leading-tight mt-0.5">${comp.address}</p>
+            <p class="text-[10px] font-semibold mt-0.5">Tel: ${comp.tel}</p>
+            <div class="mt-2 py-1 border-y border-dashed border-slate-800">
+              <p class="text-xs font-bold uppercase tracking-widest">RESIT RASMI / RECEIPT</p>
+            </div>
+          </div>
 
-        if (currentCompany === 'MZR') {
-          // ================= RESIT MZR (FORMAT KLASIK / KORPORAT BERKANUN) =================
-          paper.className = "receipt-container bg-[#fffdfa] font-receipt text-stone-900 p-4 shadow-xl border border-stone-300 rounded text-xs leading-tight";
-          paper.innerHTML = `
-            <div class="text-center pb-2 border-b-2 border-double border-emerald-900">
-              <div class="w-12 h-12 mx-auto mb-1 flex items-center justify-center p-0.5 bg-white border border-stone-300 rounded shadow-xs">
-                <img src="${comp.logo}" alt="MZR" class="max-h-full max-w-full object-contain" onerror="this.style.display='none'" />
-              </div>
-              <h2 class="text-sm font-bold uppercase tracking-wider text-emerald-950 font-mzr-title leading-snug">${comp.name}</h2>
-              <p class="text-[9.5px] text-stone-600 whitespace-pre-line leading-tight mt-0.5 font-mzr-body">${comp.address}</p>
-              <p class="text-[10px] font-semibold text-emerald-900 mt-0.5">Tel: ${comp.tel}</p>
-              <div class="mt-2 py-1 border-y-2 border-double border-emerald-900 bg-emerald-50/70 text-center">
-                <p class="text-xs font-bold uppercase tracking-widest text-emerald-950 font-mzr-title">RESIT RASMI</p>
-                <p class="text-[8.5px] text-emerald-800 font-semibold tracking-wide">PENGESAHAN BAYARAN TUNAI / PINDAHAN</p>
+          <div class="py-2 text-[10px] space-y-0.5 border-b border-dashed border-slate-400">
+            <div class="flex justify-between"><span class="text-slate-500">No. Resit:</span> <span class="font-bold" id="active-quote-no">${placeholderNo}</span></div>
+            <div class="flex justify-between"><span class="text-slate-500">Tarikh:</span> <span>${displayDate}</span></div>
+            ${linkedQuoteNo ? `<div class="flex justify-between"><span class="text-slate-500">Ruj. Quot:</span> <span>${linkedQuoteNo}</span></div>` : ''}
+            <div class="flex justify-between"><span class="text-slate-500">Bayaran:</span> <span>${validityText}</span></div>
+            <div class="mt-1 pt-1 border-t border-dotted border-slate-300">
+              <p class="text-slate-500">Pelanggan:</p>
+              <p class="font-bold">${custName}</p>
+            </div>
+          </div>
+
+          <div class="py-2 border-b border-dashed border-slate-400">
+            <div class="flex justify-between font-bold text-[10px] pb-1 border-b border-slate-300">
+              <span>ITEM</span>
+              <span>JUMLAH</span>
+            </div>
+            <div class="py-1.5 text-[10px]">
+              <p class="font-bold">${item ? (item.type === 'laptop_only' ? (item.brand + ' ' + item.model) : ('KOMBO ' + item.laptop.model + ' + PRINTER')) : 'Item'}</p>
+              <div class="flex justify-between text-slate-600 mt-0.5">
+                <span>${qty} x RM ${item ? item.price.toFixed(2) : '0.00'}</span>
+                <span class="font-bold text-slate-900">RM ${subtotal.toFixed(2)}</span>
               </div>
             </div>
+          </div>
 
-            <div class="py-2 text-[10px] space-y-0.5 border-b border-dashed border-stone-400">
-              <div class="flex justify-between"><span class="text-stone-500">No. Resit:</span> <span class="font-bold text-emerald-950 font-mono" id="active-quote-no">${placeholderNo}</span></div>
-              <div class="flex justify-between"><span class="text-stone-500">Tarikh:</span> <span>${displayDate}</span></div>
-              ${linkedQuoteNo ? `<div class="flex justify-between"><span class="text-stone-500">Ruj. Sebut Harga:</span> <span class="font-semibold text-emerald-900">${linkedQuoteNo}</span></div>` : ''}
-              <div class="flex justify-between"><span class="text-stone-500">Kaedah Bayaran:</span> <span class="font-medium text-stone-800">${validityText}</span></div>
-              <div class="mt-1 pt-1 border-t border-dotted border-stone-300">
-                <p class="text-stone-500 text-[9px]">Diterima Daripada:</p>
-                <p class="font-bold text-stone-950">${custName}</p>
-              </div>
+          <div class="py-2 text-[11px] space-y-1 border-b border-dashed border-slate-400">
+            <div class="flex justify-between text-slate-600">
+              <span>Sub-Jumlah:</span>
+              <span>RM ${subtotal.toFixed(2)}</span>
             </div>
+            <div class="flex justify-between text-slate-600">
+              <span>Cukai SST (0%):</span>
+              <span>RM 0.00</span>
+            </div>
+            <div class="flex justify-between font-bold text-xs pt-1 border-t border-slate-800">
+              <span>JUMLAH DIBAYAR:</span>
+              <span>RM ${subtotal.toFixed(2)}</span>
+            </div>
+          </div>
 
-            <div class="py-2 border-b border-dashed border-stone-400">
-              <div class="flex justify-between font-bold text-[10px] pb-1 border-b border-stone-300 text-stone-700">
-                <span>KETERANGAN ITEM</span>
-                <span>JUMLAH</span>
-              </div>
-              <div class="py-1.5 text-[10px]">
-                <p class="font-bold text-stone-900">${itemTitle}</p>
-                ${itemSpecsText ? `<p class="text-[8.5px] text-stone-500 leading-tight mt-0.5 font-mono">${itemSpecsText}</p>` : ''}
-                <div class="flex justify-between text-stone-600 mt-1 font-mono">
-                  <span>${qty} unit x RM ${item ? item.price.toFixed(2) : '0.00'}</span>
-                  <span class="font-bold text-stone-900">RM ${subtotal.toFixed(2)}</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="py-2 text-[11px] space-y-1 border-b-2 border-double border-emerald-950">
-              <div class="flex justify-between text-stone-600">
-                <span>Sub-Jumlah:</span>
-                <span class="font-mono">RM ${subtotal.toFixed(2)}</span>
-              </div>
-              <div class="flex justify-between text-stone-600">
-                <span>Cukai SST (0%):</span>
-                <span class="font-mono">RM 0.00</span>
-              </div>
-              <div class="flex justify-between font-bold text-xs pt-1 border-t border-stone-300 text-emerald-950">
-                <span>JUMLAH DIBAYAR:</span>
-                <span class="font-mono text-sm">RM ${subtotal.toFixed(2)}</span>
-              </div>
-            </div>
-
-            <div class="text-center pt-2.5 space-y-1 text-[9px] text-stone-600">
-              <div class="inline-block px-2.5 py-0.5 bg-emerald-100/80 text-emerald-900 font-bold rounded text-[9px] border border-emerald-200">
-                ✓ STATUS: SELESAI / DIBAYAR PENUH
-              </div>
-              <p class="font-medium text-stone-700 pt-0.5">${comp.bank}</p>
-              <div class="my-1.5 py-1 border border-dashed border-stone-300 rounded bg-stone-50 text-center">
-                <p class="text-[8px] text-stone-500 uppercase tracking-widest font-semibold">[ PENGESAHAN ELEKTRONIK ]</p>
-                <p class="text-[9px] font-bold text-stone-800 font-mzr-title mt-0.5">${comp.name}</p>
-              </div>
-              <p class="italic text-stone-500">Terima kasih atas urus niaga anda.</p>
-              <p class="text-[8px] tracking-widest text-stone-400">*** SIMPAN SEBAGAI BUKTI BAYARAN RASMI ***</p>
-            </div>
-          `;
-          return;
-        } else {
-          // ================= RESIT ALT (FORMAT DIGITAL TECH / MINIMALIS) =================
-          paper.className = "receipt-container bg-white font-alt text-slate-900 p-4 shadow-xl border border-slate-300 rounded text-xs leading-tight";
-          paper.innerHTML = `
-            <div class="bg-slate-900 text-white p-2 rounded-lg mb-2 flex items-center justify-between">
-              <div class="flex items-center gap-2">
-                <div class="w-8 h-8 bg-white p-0.5 rounded flex items-center justify-center flex-shrink-0">
-                  <img src="${comp.logo}" alt="ALT" class="max-h-full max-w-full object-contain" onerror="this.style.display='none'" />
-                </div>
-                <div class="text-left leading-tight">
-                  <p class="text-[10px] font-black tracking-wider text-blue-400 uppercase font-alt">${comp.name}</p>
-                  <p class="text-[7.5px] text-slate-300 font-mono tracking-wide">DIGITAL & LOGISTICS SOLUTIONS</p>
-                </div>
-              </div>
-              <span class="text-[8px] font-mono font-bold bg-blue-600 text-white px-1.5 py-0.5 rounded tracking-wider">POS 80MM</span>
-            </div>
-
-            <div class="text-center pb-2 border-b border-dashed border-slate-300">
-              <p class="text-[9px] text-slate-500 whitespace-pre-line leading-tight">${comp.address}</p>
-              <p class="text-[9px] font-mono text-slate-700 mt-0.5">TEL: ${comp.tel}</p>
-              <div class="mt-1.5 py-1 bg-slate-100 rounded text-center border border-slate-200">
-                <p class="text-[10.5px] font-black uppercase tracking-widest text-slate-900 font-mono">OFFICIAL RECEIPT // E-RESIT</p>
-              </div>
-            </div>
-
-            <div class="py-2 text-[10px] space-y-1 border-b border-dashed border-slate-300 font-mono">
-              <div class="flex justify-between items-center"><span class="text-slate-400 uppercase text-[9px]">DOC REF:</span> <span class="font-bold text-blue-900 text-[10.5px]" id="active-quote-no">${placeholderNo}</span></div>
-              <div class="flex justify-between items-center"><span class="text-slate-400 uppercase text-[9px]">TIMESTAMP:</span> <span class="text-slate-800">${displayDate}</span></div>
-              ${linkedQuoteNo ? `<div class="flex justify-between items-center"><span class="text-slate-400 uppercase text-[9px]">QUOT REF:</span> <span class="text-blue-700 font-bold">${linkedQuoteNo}</span></div>` : ''}
-              <div class="flex justify-between items-center"><span class="text-slate-400 uppercase text-[9px]">PAYMENT:</span> <span class="px-1.5 py-0.5 bg-blue-50 text-blue-800 font-sans font-bold rounded text-[9px]">${validityText}</span></div>
-              <div class="mt-1 pt-1 border-t border-dotted border-slate-200 font-sans">
-                <span class="text-slate-400 font-mono uppercase text-[8.5px] block">CLIENT / ENTITY:</span>
-                <p class="font-bold text-slate-900 text-[10.5px] mt-0.5">${custName}</p>
-              </div>
-            </div>
-
-            <div class="py-2 border-b border-dashed border-slate-300">
-              <div class="flex justify-between font-bold text-[9px] pb-1 border-b border-slate-200 text-slate-500 font-mono">
-                <span>DESCRIPTION / SKU</span>
-                <span>AMOUNT</span>
-              </div>
-              <div class="py-1.5 text-[10px]">
-                <p class="font-bold text-slate-900 font-alt">${itemTitle}</p>
-                ${itemSpecsText ? `<p class="text-[8.5px] text-slate-500 font-mono leading-tight mt-0.5">${itemSpecsText}</p>` : ''}
-                <div class="flex justify-between text-slate-600 mt-1 font-mono">
-                  <span>${qty} UNIT x RM ${item ? item.price.toFixed(2) : '0.00'}</span>
-                  <span class="font-bold text-slate-900">RM ${subtotal.toFixed(2)}</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="py-2 border-b border-dashed border-slate-300 space-y-1 text-[10px]">
-              <div class="flex justify-between text-slate-500 font-mono">
-                <span>SUBTOTAL:</span>
-                <span class="font-bold text-slate-700">RM ${subtotal.toFixed(2)}</span>
-              </div>
-              <div class="flex justify-between text-slate-500 font-mono">
-                <span>TAX SST (0%):</span>
-                <span class="font-bold text-slate-700">RM 0.00</span>
-              </div>
-              <div class="bg-slate-900 text-white px-2.5 py-2 rounded-lg flex justify-between items-center mt-1.5">
-                <span class="text-[9.5px] font-bold tracking-wider text-slate-300 font-mono uppercase">TOTAL PAID:</span>
-                <span class="text-sm font-black font-mono text-white">RM ${subtotal.toFixed(2)}</span>
-              </div>
-            </div>
-
-            <div class="text-center pt-2 space-y-1.5 text-[9px] text-slate-500">
-              <div class="flex justify-between items-center px-1 font-mono text-[8.5px]">
-                <span class="text-emerald-600 font-bold">● TXN VERIFIED</span>
-                <span class="text-slate-400">80MM-THERMAL</span>
-              </div>
-              <p class="font-mono text-[9px] text-slate-700">${comp.bank}</p>
-              
-              <!-- Barcode Visual Tech Thermal 
-              <div class="py-1 my-1 bg-slate-50 rounded border border-slate-200">
-                <div class="font-mono text-[11px] tracking-[4px] font-bold text-slate-800 select-none">
-                  ||| | |||| | ||||| || |||||| |||| | |||
-                </div>
-                <p class="text-[8px] font-mono text-slate-400 mt-0.5">AUTH-KEY: ${placeholderNo}</p>
-              </div> -->
-
-              <p class="text-[8px] font-mono uppercase text-slate-400 tracking-wider">COMPUTER GENERATED • NO SIGNATURE REQUIRED</p>
-              <p class="text-[8px] text-slate-400 font-mono">AXIS LOGISTICS TECHNOLOGIES SYSTEM</p>
-            </div>
-          `;
-          return;
-        }
+          <div class="text-center pt-3 space-y-1 text-[9px] text-slate-500">
+            <p class="font-bold text-slate-800">STATUS: SELESAI / DIBAYAR PENUH</p>
+            <p>${comp.bank}</p>
+            <p class="italic">Terima kasih atas urus niaga anda.</p>
+            <p class="tracking-widest">*** SIMPAN SEBAGAI BUKTI ***</p>
+          </div>
+        `;
+        return;
       }
 
       // Label tajuk dokumen A4
@@ -1138,7 +994,7 @@
           const calculatedHeightMm = Math.max(140, Math.ceil((elementHeight * 25.4) / 96) + 10);
 
           opt = {
-            margin: [3, 2, 3, 2],
+            margin: [3, 2, 3, 2], // Margin minimal untuk thermal
             filename: `${safeFileName}_Resit.pdf`,
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: {
@@ -1198,5 +1054,4 @@
     window.onload = checkAuthOnLoad;
   </script>
 </body>
-
 </html>
