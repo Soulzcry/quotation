@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ms">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,15 +10,28 @@
   <!-- Google Fonts: Cinzel, Lora, Plus Jakarta Sans, Space Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
   <!-- html2pdf.js CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <style>
-    .font-mzr-title { font-family: 'Cinzel', serif; }
-    .font-mzr-body { font-family: 'Lora', serif; }
-    .font-alt { font-family: 'Plus Jakarta Sans', sans-serif; }
-    .font-receipt { font-family: 'Space Mono', monospace, courier; }
+    .font-mzr-title {
+      font-family: 'Cinzel', serif;
+    }
+
+    .font-mzr-body {
+      font-family: 'Lora', serif;
+    }
+
+    .font-alt {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .font-receipt {
+      font-family: 'Space Mono', monospace, courier;
+    }
 
     /* Saiz A4 standard */
     .a4-container {
@@ -40,9 +54,12 @@
       body * {
         visibility: hidden;
       }
-      #quotation-paper, #quotation-paper * {
+
+      #quotation-paper,
+      #quotation-paper * {
         visibility: visible;
       }
+
       #quotation-paper {
         position: absolute;
         left: 0;
@@ -55,6 +72,7 @@
     }
   </style>
 </head>
+
 <body class="bg-slate-100 text-slate-800 min-h-screen font-sans">
 
   <!-- ================= 1. SKRIN PENGESAHAN PIN ================= -->
@@ -62,7 +80,9 @@
     <div class="bg-white max-w-sm w-full rounded-2xl p-6 shadow-2xl border border-slate-200 text-center space-y-5">
       <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto">
         <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
+          </path>
         </svg>
       </div>
 
@@ -74,7 +94,8 @@
       <form onsubmit="handlePinSubmit(event)" class="space-y-4">
         <div>
           <input type="password" id="input-pin" inputmode="numeric" placeholder="Masukkan PIN" maxlength="12"
-            class="w-full text-center tracking-[0.3em] font-mono text-xl py-3 px-4 border-2 border-slate-200 rounded-xl focus:border-blue-600 outline-none transition" required autofocus />
+            class="w-full text-center tracking-[0.3em] font-mono text-xl py-3 px-4 border-2 border-slate-200 rounded-xl focus:border-blue-600 outline-none transition"
+            required autofocus />
           <p id="pin-error-msg" class="text-xs text-red-600 mt-2 hidden"></p>
         </div>
 
@@ -94,7 +115,8 @@
         <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
         <span class="text-xs font-semibold text-slate-600">Sistem Dokumen Perniagaan Cloud Aktif</span>
       </div>
-      <button onclick="handleLogout()" class="text-xs font-medium text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 py-1.5 px-3 rounded-lg transition">
+      <button onclick="handleLogout()"
+        class="text-xs font-medium text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 py-1.5 px-3 rounded-lg transition">
         Log Keluar
       </button>
     </div>
@@ -110,7 +132,8 @@
 
         <!-- Pemilihan Syarikat -->
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Entiti Perniagaan</label>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Entiti
+            Perniagaan</label>
           <div class="grid grid-cols-1 gap-2">
             <button type="button" id="btn-comp-mzr" onclick="setCompany('MZR')"
               class="p-2.5 border-2 rounded-xl text-left transition-all border-emerald-700 bg-emerald-50 text-emerald-950 font-semibold flex items-center justify-between">
@@ -136,10 +159,15 @@
         <div>
           <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Jenis Dokumen</label>
           <div class="grid grid-cols-4 gap-1.5">
-            <button type="button" onclick="setDocType('QUOT')" id="btn-doc-quot" class="py-2 text-xs font-bold rounded-lg border-2 border-slate-900 bg-slate-900 text-white transition text-center">Quot</button>
-            <button type="button" onclick="setDocType('DO')" id="btn-doc-do" class="py-2 text-xs font-bold rounded-lg border-2 border-slate-200 text-slate-700 hover:border-slate-300 transition text-center">D.O.</button>
-            <button type="button" onclick="setDocType('INV')" id="btn-doc-inv" class="py-2 text-xs font-bold rounded-lg border-2 border-slate-200 text-slate-700 hover:border-slate-300 transition text-center">Invois</button>
-            <button type="button" onclick="setDocType('REC')" id="btn-doc-rec" class="py-2 text-xs font-bold rounded-lg border-2 border-slate-200 text-slate-700 hover:border-slate-300 transition text-center">Resit 🖨️</button>
+            <button type="button" onclick="setDocType('QUOT')" id="btn-doc-quot"
+              class="py-2 text-xs font-bold rounded-lg border-2 border-slate-900 bg-slate-900 text-white transition text-center">Quot</button>
+            <button type="button" onclick="setDocType('DO')" id="btn-doc-do"
+              class="py-2 text-xs font-bold rounded-lg border-2 border-slate-200 text-slate-700 hover:border-slate-300 transition text-center">D.O.</button>
+            <button type="button" onclick="setDocType('INV')" id="btn-doc-inv"
+              class="py-2 text-xs font-bold rounded-lg border-2 border-slate-200 text-slate-700 hover:border-slate-300 transition text-center">Invois</button>
+            <button type="button" onclick="setDocType('REC')" id="btn-doc-rec"
+              class="py-2 text-xs font-bold rounded-lg border-2 border-slate-200 text-slate-700 hover:border-slate-300 transition text-center">Resit
+              🖨️</button>
           </div>
         </div>
 
@@ -154,9 +182,11 @@
         <div id="section-load-quote" class="hidden p-3 bg-blue-50 border border-blue-200 rounded-xl space-y-1.5">
           <label class="block text-xs font-bold text-blue-950 flex items-center justify-between">
             <span>Tarik Data Sebut Harga:</span>
-            <button type="button" onclick="fetchSavedQuotations()" class="text-[10px] text-blue-600 hover:underline font-normal">Segarkan</button>
+            <button type="button" onclick="fetchSavedQuotations()"
+              class="text-[10px] text-blue-600 hover:underline font-normal">Segarkan</button>
           </label>
-          <select id="saved-quote-dropdown" onchange="loadQuotationToForm(this.value)" class="w-full text-xs p-2 rounded-lg border border-blue-300 bg-white outline-none">
+          <select id="saved-quote-dropdown" onchange="loadQuotationToForm(this.value)"
+            class="w-full text-xs p-2 rounded-lg border border-blue-300 bg-white outline-none">
             <option value="">-- Sedang memuatkan senarai... --</option>
           </select>
           <p class="text-[10px] text-blue-700">Pilih pelanggan untuk mengisi semula butiran automatik.</p>
@@ -164,7 +194,8 @@
 
         <!-- Maklumat Penerima -->
         <div class="space-y-2">
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Maklumat Pelanggan / Klien</label>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Maklumat Pelanggan /
+            Klien</label>
           <input type="text" id="cust-name" placeholder="Nama Syarikat / Jabatan"
             class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-slate-400 outline-none text-sm"
             value="Bahagian Pengurusan Teknologi Maklumat" />
@@ -174,8 +205,10 @@
 
         <!-- Dropdown Item dari item.json -->
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Pilihan Item / Kombo</label>
-          <select id="item-dropdown" class="w-full px-3 py-2.5 border rounded-lg focus:ring-2 focus:ring-slate-400 outline-none text-xs bg-white font-medium">
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Pilihan Item /
+            Kombo</label>
+          <select id="item-dropdown"
+            class="w-full px-3 py-2.5 border rounded-lg focus:ring-2 focus:ring-slate-400 outline-none text-xs bg-white font-medium">
             <option value="">Memuatkan senarai item.json...</option>
           </select>
         </div>
@@ -201,7 +234,8 @@
           <button id="btn-download" onclick="executeDocumentWorkflow()"
             class="w-full bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-bold py-3.5 px-4 rounded-xl transition text-sm shadow flex items-center justify-center gap-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
             </svg>
             <span id="btn-label">Kunci No. Siri & Muat Turun Dokumen</span>
           </button>
@@ -684,13 +718,13 @@
               </div>
               <p class="font-mono text-[9px] text-slate-700">${comp.bank}</p>
               
-              <!-- Barcode Visual Tech Thermal -->
+              <!-- Barcode Visual Tech Thermal 
               <div class="py-1 my-1 bg-slate-50 rounded border border-slate-200">
                 <div class="font-mono text-[11px] tracking-[4px] font-bold text-slate-800 select-none">
                   ||| | |||| | ||||| || |||||| |||| | |||
                 </div>
                 <p class="text-[8px] font-mono text-slate-400 mt-0.5">AUTH-KEY: ${placeholderNo}</p>
-              </div>
+              </div> -->
 
               <p class="text-[8px] font-mono uppercase text-slate-400 tracking-wider">COMPUTER GENERATED • NO SIGNATURE REQUIRED</p>
               <p class="text-[8px] text-slate-400 font-mono">AXIS LOGISTICS TECHNOLOGIES SYSTEM</p>
@@ -1164,4 +1198,5 @@
     window.onload = checkAuthOnLoad;
   </script>
 </body>
+
 </html>
