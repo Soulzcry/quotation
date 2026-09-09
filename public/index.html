@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sistem Dokumen Korporat - Sebut Harga, DO & Invois</title>
+  <title>Sistem Dokumen Korporat - Sebut Harga, DO, Invois & Resit</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Cinzel, Lora, Plus Jakarta Sans -->
+  <!-- Google Fonts: Cinzel, Lora, Plus Jakarta Sans, Space Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <!-- html2pdf.js CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
@@ -17,13 +17,23 @@
     .font-mzr-title { font-family: 'Cinzel', serif; }
     .font-mzr-body { font-family: 'Lora', serif; }
     .font-alt { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .font-receipt { font-family: 'Space Mono', monospace, courier; }
 
-    /* Saiz responsif yang muat tepat pada nisbah A4 tanpa terpotong */
+    /* Saiz A4 standard */
     .a4-container {
       width: 100% !important;
       max-width: 760px !important;
       min-height: 1040px !important;
       box-sizing: border-box !important;
+    }
+
+    /* Saiz Khas Pencetak Resit Bluetooth Thermal (80mm standard) */
+    .receipt-container {
+      width: 302px !important;
+      min-width: 302px !important;
+      max-width: 302px !important;
+      box-sizing: border-box !important;
+      margin: 0 auto !important;
     }
 
     @media print {
@@ -37,7 +47,6 @@
         position: absolute;
         left: 0;
         top: 0;
-        width: 100%;
         margin: 0;
         padding: 0;
         box-shadow: none;
@@ -93,15 +102,15 @@
     <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
 
       <!-- BAHAGIAN BORANG KAWALAN (KIRI) -->
-      <div class="lg:col-span-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5 self-start">
+      <div class="lg:col-span-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4 self-start">
         <div class="border-b pb-3">
           <h1 class="text-xl font-black text-slate-900 tracking-tight">Penjana Dokumen</h1>
-          <p class="text-xs text-slate-500 mt-0.5">Sebut Harga (QUOT), Delivery Order (DO) & Invois (INV)</p>
+          <p class="text-xs text-slate-500 mt-0.5">Sebut Harga, D.O., Invois & Resit (Thermal 80mm)</p>
         </div>
 
         <!-- Pemilihan Syarikat -->
         <div>
-          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Entiti Perniagaan</label>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Entiti Perniagaan</label>
           <div class="grid grid-cols-1 gap-2">
             <button type="button" id="btn-comp-mzr" onclick="setCompany('MZR')"
               class="p-2.5 border-2 rounded-xl text-left transition-all border-emerald-700 bg-emerald-50 text-emerald-950 font-semibold flex items-center justify-between">
@@ -123,30 +132,38 @@
           </div>
         </div>
 
-        <!-- Pemilihan Jenis Dokumen -->
+        <!-- Pemilihan Jenis Dokumen (4 Pilihan) -->
         <div>
           <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Jenis Dokumen</label>
-          <div class="grid grid-cols-3 gap-2">
-            <button type="button" onclick="setDocType('QUOT')" id="btn-doc-quot" class="py-2 text-xs font-bold rounded-lg border-2 border-slate-900 bg-slate-900 text-white transition">Sebut Harga</button>
-            <button type="button" onclick="setDocType('DO')" id="btn-doc-do" class="py-2 text-xs font-bold rounded-lg border-2 border-slate-200 text-slate-700 hover:border-slate-300 transition">D.O.</button>
-            <button type="button" onclick="setDocType('INV')" id="btn-doc-inv" class="py-2 text-xs font-bold rounded-lg border-2 border-slate-200 text-slate-700 hover:border-slate-300 transition">Invois</button>
+          <div class="grid grid-cols-4 gap-1.5">
+            <button type="button" onclick="setDocType('QUOT')" id="btn-doc-quot" class="py-2 text-xs font-bold rounded-lg border-2 border-slate-900 bg-slate-900 text-white transition text-center">Quot</button>
+            <button type="button" onclick="setDocType('DO')" id="btn-doc-do" class="py-2 text-xs font-bold rounded-lg border-2 border-slate-200 text-slate-700 hover:border-slate-300 transition text-center">D.O.</button>
+            <button type="button" onclick="setDocType('INV')" id="btn-doc-inv" class="py-2 text-xs font-bold rounded-lg border-2 border-slate-200 text-slate-700 hover:border-slate-300 transition text-center">Invois</button>
+            <button type="button" onclick="setDocType('REC')" id="btn-doc-rec" class="py-2 text-xs font-bold rounded-lg border-2 border-slate-200 text-slate-700 hover:border-slate-300 transition text-center">Resit 🖨️</button>
           </div>
+        </div>
+
+        <!-- Setup Tarikh Dokumen (Boleh Disesuaikan untuk Semua Dokumen) -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Tarikh Dokumen</label>
+          <input type="date" id="doc-date"
+            class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-slate-400 outline-none text-sm bg-white font-medium" />
         </div>
 
         <!-- Bahagian Muat Rekod Pelanggan Lama -->
         <div id="section-load-quote" class="hidden p-3 bg-blue-50 border border-blue-200 rounded-xl space-y-1.5">
           <label class="block text-xs font-bold text-blue-950 flex items-center justify-between">
-            <span>Tarik Data Sebut Harga Terdahulu:</span>
+            <span>Tarik Data Sebut Harga:</span>
             <button type="button" onclick="fetchSavedQuotations()" class="text-[10px] text-blue-600 hover:underline font-normal">Segarkan</button>
           </label>
           <select id="saved-quote-dropdown" onchange="loadQuotationToForm(this.value)" class="w-full text-xs p-2 rounded-lg border border-blue-300 bg-white outline-none">
             <option value="">-- Sedang memuatkan senarai... --</option>
           </select>
-          <p class="text-[10px] text-blue-700">Pilih pelanggan untuk mengisi semula butiran automatik bagi DO/Invois.</p>
+          <p class="text-[10px] text-blue-700">Pilih pelanggan untuk mengisi semula butiran automatik.</p>
         </div>
 
         <!-- Maklumat Penerima -->
-        <div class="space-y-2.5">
+        <div class="space-y-2">
           <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Maklumat Pelanggan / Klien</label>
           <input type="text" id="cust-name" placeholder="Nama Syarikat / Jabatan"
             class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-slate-400 outline-none text-sm"
@@ -163,7 +180,7 @@
           </select>
         </div>
 
-        <!-- Kuantiti & Tempoh Sah / Tarikh Matang -->
+        <!-- Kuantiti & Maklumat Tambahan (Tempoh Sah / Kaedah Bayaran / Serahan) -->
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Kuantiti</label>
@@ -189,8 +206,8 @@
             <span id="btn-label">Kunci No. Siri & Muat Turun Dokumen</span>
           </button>
 
-          <p class="text-[11px] text-slate-400 text-center leading-relaxed">
-            * Data dan nombor siri disimpan secara atomik ke Upstash Redis supaya boleh dipanggil semula untuk DO & Invois.
+          <p id="print-note" class="text-[11px] text-slate-400 text-center leading-relaxed">
+            * Data dan nombor siri disimpan secara atomik ke Upstash Redis.
           </p>
         </div>
       </div>
@@ -248,6 +265,11 @@
     function revealApp() {
       document.getElementById('pin-screen').classList.add('hidden');
       document.getElementById('main-app').classList.remove('hidden');
+      // Set tarikh hari ini sebagai default pada input tarikh
+      const dateInput = document.getElementById('doc-date');
+      if (!dateInput.value) {
+        dateInput.value = new Date().toISOString().split('T')[0];
+      }
       loadItems();
     }
 
@@ -275,7 +297,8 @@
         prefixes: {
           QUOT: "MZR/QT",
           DO: "MZR/DO",
-          INV: "MZR/INV"
+          INV: "MZR/INV",
+          REC: "MZR/RC"
         }
       },
       ALT: {
@@ -288,13 +311,14 @@
         prefixes: {
           QUOT: "ALT/EST",
           DO: "ALT/DO",
-          INV: "ALT/INV"
+          INV: "ALT/INV",
+          REC: "ALT/RC"
         }
       }
     };
 
     let currentCompany = 'MZR';
-    let currentDocType = 'QUOT'; // 'QUOT' | 'DO' | 'INV'
+    let currentDocType = 'QUOT'; // 'QUOT' | 'DO' | 'INV' | 'REC'
     let availableItems = [];
     let linkedQuoteNo = null;
 
@@ -376,33 +400,43 @@
     async function setDocType(type) {
       currentDocType = type;
 
-      ['QUOT', 'DO', 'INV'].forEach(t => {
+      ['QUOT', 'DO', 'INV', 'REC'].forEach(t => {
         const btn = document.getElementById(`btn-doc-${t.toLowerCase()}`);
         if (t === type) {
-          btn.className = "py-2 text-xs font-bold rounded-lg border-2 border-slate-900 bg-slate-900 text-white transition";
+          btn.className = "py-2 text-xs font-bold rounded-lg border-2 border-slate-900 bg-slate-900 text-white transition text-center";
         } else {
-          btn.className = "py-2 text-xs font-bold rounded-lg border-2 border-slate-200 text-slate-700 hover:border-slate-300 transition";
+          btn.className = "py-2 text-xs font-bold rounded-lg border-2 border-slate-200 text-slate-700 hover:border-slate-300 transition text-center";
         }
       });
 
       const loadSection = document.getElementById('section-load-quote');
       const labelValidity = document.getElementById('label-validity');
       const quoteValInput = document.getElementById('quote-validity');
+      const printNote = document.getElementById('print-note');
 
       if (type === 'QUOT') {
         loadSection.classList.add('hidden');
         labelValidity.innerHTML = 'Tempoh Sah <span class="text-[10px] text-slate-400 font-normal">(0 = "-")</span>';
         quoteValInput.value = "30 Hari";
+        printNote.textContent = "* Format: Saiz Standard A4 Rasmi.";
         linkedQuoteNo = null;
       } else if (type === 'DO') {
         loadSection.classList.remove('hidden');
-        labelValidity.innerHTML = 'No. Kenderaan / Catatan Penghantaran';
+        labelValidity.innerHTML = 'Kaedah Serahan / No. Lori';
         quoteValInput.value = "Lori Sendiri / Serahan Tangan";
+        printNote.textContent = "* Format: Saiz Standard A4 Rasmi.";
         await fetchSavedQuotations();
       } else if (type === 'INV') {
         loadSection.classList.remove('hidden');
         labelValidity.innerHTML = 'Terma Bayaran (Due Date)';
         quoteValInput.value = "30 Hari / Bersih";
+        printNote.textContent = "* Format: Saiz Standard A4 Rasmi.";
+        await fetchSavedQuotations();
+      } else if (type === 'REC') {
+        loadSection.classList.remove('hidden');
+        labelValidity.innerHTML = 'Kaedah Bayaran';
+        quoteValInput.value = "Pindahan Bank / Tunai";
+        printNote.textContent = "* Format: Resit Bluetooth Thermal (80mm) untuk pencetak mudah alih.";
         await fetchSavedQuotations();
       }
 
@@ -453,7 +487,7 @@
       }
     }
 
-    // ================= 6. PAPARAN DOKUMEN (QUOTATION / DO / INVOICE) =================
+    // ================= 6. PAPARAN DOKUMEN (QUOTATION / DO / INVOICE / RESIT 80MM) =================
     function renderDocument() {
       const paper = document.getElementById('quotation-paper');
       const comp = companyData[currentCompany];
@@ -472,12 +506,88 @@
         }
       }
 
-      const today = new Date().toLocaleDateString('ms-MY', { day: '2-digit', month: '2-digit', year: 'numeric' });
-      const year = new Date().getFullYear();
+      // Tarikh dari Input Tarikh (Boleh setup sendiri)
+      const rawDate = document.getElementById('doc-date').value;
+      let displayDate = "";
+      if (rawDate) {
+        const parts = rawDate.split('-');
+        displayDate = `${parts[2]}/${parts[1]}/${parts[0]}`; // DD/MM/YYYY
+      } else {
+        displayDate = new Date().toLocaleDateString('ms-MY', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      }
+
+      const year = rawDate ? rawDate.split('-')[0] : new Date().getFullYear();
       const currentPrefix = comp.prefixes[currentDocType];
       const placeholderNo = `${currentPrefix}/${year}/----`;
       const subtotal = item ? item.price * qty : 0;
 
+      // ================= JIKA MOD RESIT BLUETOOTH THERMAL (80MM) =================
+      if (currentDocType === 'REC') {
+        paper.className = "receipt-container bg-white font-receipt text-slate-900 p-4 shadow-xl border border-slate-300 rounded text-xs leading-tight";
+        paper.innerHTML = `
+          <div class="text-center pb-2 border-b border-dashed border-slate-400">
+            <div class="w-12 h-12 mx-auto mb-1 flex items-center justify-center">
+              <img src="${comp.logo}" alt="Logo" class="max-h-full max-w-full object-contain" onerror="this.style.display='none'" />
+            </div>
+            <h2 class="text-sm font-bold uppercase tracking-wider">${comp.name}</h2>
+            <p class="text-[10px] text-slate-600 whitespace-pre-line leading-tight mt-0.5">${comp.address}</p>
+            <p class="text-[10px] font-semibold mt-0.5">Tel: ${comp.tel}</p>
+            <div class="mt-2 py-1 border-y border-dashed border-slate-800">
+              <p class="text-xs font-bold uppercase tracking-widest">RESIT RASMI / RECEIPT</p>
+            </div>
+          </div>
+
+          <div class="py-2 text-[10px] space-y-0.5 border-b border-dashed border-slate-400">
+            <div class="flex justify-between"><span class="text-slate-500">No. Resit:</span> <span class="font-bold" id="active-quote-no">${placeholderNo}</span></div>
+            <div class="flex justify-between"><span class="text-slate-500">Tarikh:</span> <span>${displayDate}</span></div>
+            ${linkedQuoteNo ? `<div class="flex justify-between"><span class="text-slate-500">Ruj. Quot:</span> <span>${linkedQuoteNo}</span></div>` : ''}
+            <div class="flex justify-between"><span class="text-slate-500">Bayaran:</span> <span>${validityText}</span></div>
+            <div class="mt-1 pt-1 border-t border-dotted border-slate-300">
+              <p class="text-slate-500">Pelanggan:</p>
+              <p class="font-bold">${custName}</p>
+            </div>
+          </div>
+
+          <div class="py-2 border-b border-dashed border-slate-400">
+            <div class="flex justify-between font-bold text-[10px] pb-1 border-b border-slate-300">
+              <span>ITEM</span>
+              <span>JUMLAH</span>
+            </div>
+            <div class="py-1.5 text-[10px]">
+              <p class="font-bold">${item ? (item.type === 'laptop_only' ? (item.brand + ' ' + item.model) : ('KOMBO ' + item.laptop.model + ' + PRINTER')) : 'Item'}</p>
+              <div class="flex justify-between text-slate-600 mt-0.5">
+                <span>${qty} x RM ${item ? item.price.toFixed(2) : '0.00'}</span>
+                <span class="font-bold text-slate-900">RM ${subtotal.toFixed(2)}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="py-2 text-[11px] space-y-1 border-b border-dashed border-slate-400">
+            <div class="flex justify-between text-slate-600">
+              <span>Sub-Jumlah:</span>
+              <span>RM ${subtotal.toFixed(2)}</span>
+            </div>
+            <div class="flex justify-between text-slate-600">
+              <span>Cukai SST (0%):</span>
+              <span>RM 0.00</span>
+            </div>
+            <div class="flex justify-between font-bold text-xs pt-1 border-t border-slate-800">
+              <span>JUMLAH DIBAYAR:</span>
+              <span>RM ${subtotal.toFixed(2)}</span>
+            </div>
+          </div>
+
+          <div class="text-center pt-3 space-y-1 text-[9px] text-slate-500">
+            <p class="font-bold text-slate-800">STATUS: SELESAI / DIBAYAR PENUH</p>
+            <p>${comp.bank}</p>
+            <p class="italic">Terima kasih atas urus niaga anda.</p>
+            <p class="tracking-widest">*** SIMPAN SEBAGAI BUKTI ***</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Label tajuk dokumen A4
       let docTitleMZR = "SEBUT HARGA RASMI";
       let docTitleALT = "QUOTATION";
       let docNoLabel = "No. Sebut Harga";
@@ -493,7 +603,7 @@
       }
 
       if (currentCompany === 'MZR') {
-        // ================= TEMPLAT 1: MIRZAQUAN RESOURCES =================
+        // ================= TEMPLAT 1: MIRZAQUAN RESOURCES (A4) =================
         paper.className = "a4-container bg-[#fffdfa] p-8 font-mzr-body text-stone-900 flex flex-col justify-between shadow-md";
         paper.innerHTML = `
           <div>
@@ -526,7 +636,7 @@
               <div class="border border-stone-400 p-2.5 bg-stone-50/50 flex flex-col justify-between">
                 <div class="space-y-0.5">
                   <div class="flex justify-between"><span class="text-stone-600">${docNoLabel}:</span> <span class="font-mono font-bold text-emerald-950 text-xs" id="active-quote-no">${placeholderNo}</span></div>
-                  <div class="flex justify-between"><span class="text-stone-600">Tarikh:</span> <span>${today}</span></div>
+                  <div class="flex justify-between"><span class="text-stone-600">Tarikh:</span> <span>${displayDate}</span></div>
                   ${linkedQuoteNo ? `<div class="flex justify-between text-blue-900 font-semibold"><span>Rujukan Sebut Harga:</span> <span>${linkedQuoteNo}</span></div>` : ''}
                   <div class="flex justify-between"><span class="text-stone-600">${currentDocType === 'DO' ? 'Maklumat Serahan:' : (currentDocType === 'INV' ? 'Terma Bayaran:' : 'Tempoh Sah:')}</span> <span class="font-semibold text-stone-900">${validityText}</span></div>
                 </div>
@@ -596,7 +706,7 @@
           </div>
         `;
       } else {
-        // ================= TEMPLAT 2: AXIS LOGISTICS TECHNOLOGIES =================
+        // ================= TEMPLAT 2: AXIS LOGISTICS TECHNOLOGIES (A4) =================
         paper.className = "a4-container bg-white font-alt text-slate-800 flex flex-col justify-between shadow-xl";
         paper.innerHTML = `
           <div>
@@ -629,7 +739,7 @@
                 <div class="text-right space-y-1 text-[11px]">
                   <div>
                     <span class="text-slate-400 text-[10px] block">TARIKH</span>
-                    <span class="font-bold text-slate-800">${today}</span>
+                    <span class="font-bold text-slate-800">${displayDate}</span>
                   </div>
                   ${linkedQuoteNo ? `<div><span class="text-slate-400 text-[10px] block">RUJUKAN QUOTATION</span><span class="font-bold text-blue-600">${linkedQuoteNo}</span></div>` : ''}
                   <div class="pt-1">
@@ -825,6 +935,7 @@
       label.textContent = "Mengunci No. Siri di Pelayan...";
 
       try {
+        // 1. Minta nombor siri rasmi yang unik dari Upstash Redis
         const res = await fetch('/api/get-quote-no', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -837,9 +948,11 @@
         const officialDocNo = data.quoteNo;
         document.getElementById('active-quote-no').textContent = officialDocNo;
 
+        // 2. Simpan rekod pelanggan & item ke Upstash Redis jika menjana Sebut Harga
         const selectedValue = document.getElementById('item-dropdown').value;
         const selectedItem = availableItems.find(i => i.value === selectedValue);
         const qty = parseInt(document.getElementById('item-qty').value) || 1;
+        const docDate = document.getElementById('doc-date').value || new Date().toISOString();
 
         if (currentDocType === 'QUOT') {
           try {
@@ -849,7 +962,7 @@
               body: JSON.stringify({
                 quoteNo: officialDocNo,
                 companyCode: comp.code,
-                date: new Date().toISOString(),
+                date: docDate,
                 customer: {
                   name: document.getElementById('cust-name').value,
                   address: document.getElementById('cust-address').value
@@ -866,26 +979,54 @@
 
         label.textContent = "Menjana Dokumen PDF...";
 
+        // 3. Tetapan PDF Dinamik (A4 vs Thermal Bluetooth 80mm)
         const element = document.getElementById('quotation-paper');
         const safeFileName = officialDocNo.replace(/[\/\\]/g, '_');
 
-        const opt = {
-          margin: [8, 8, 8, 8],
-          filename: `${safeFileName}.pdf`,
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: {
-            scale: 2,
-            useCORS: true,
-            logging: false,
-            scrollX: 0,
-            scrollY: 0
-          },
-          jsPDF: {
-            unit: 'mm',
-            format: 'a4',
-            orientation: 'portrait'
-          }
-        };
+        let opt = {};
+
+        if (currentDocType === 'REC') {
+          // Tetapan Saiz Kertas Resit Bluetooth Roll (Lebar 80mm, tinggi automatik)
+          const elementHeight = element.offsetHeight;
+          const calculatedHeightMm = Math.max(140, Math.ceil((elementHeight * 25.4) / 96) + 10);
+
+          opt = {
+            margin: [3, 2, 3, 2],
+            filename: `${safeFileName}_Resit.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: {
+              scale: 2,
+              useCORS: true,
+              logging: false,
+              scrollX: 0,
+              scrollY: 0
+            },
+            jsPDF: {
+              unit: 'mm',
+              format: [80, calculatedHeightMm],
+              orientation: 'portrait'
+            }
+          };
+        } else {
+          // Tetapan Saiz Dokumen Standard A4
+          opt = {
+            margin: [8, 8, 8, 8],
+            filename: `${safeFileName}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: {
+              scale: 2,
+              useCORS: true,
+              logging: false,
+              scrollX: 0,
+              scrollY: 0
+            },
+            jsPDF: {
+              unit: 'mm',
+              format: 'a4',
+              orientation: 'portrait'
+            }
+          };
+        }
 
         await html2pdf().set(opt).from(element).save();
 
@@ -904,6 +1045,7 @@
     document.getElementById('cust-name').addEventListener('input', renderDocument);
     document.getElementById('cust-address').addEventListener('input', renderDocument);
     document.getElementById('quote-validity').addEventListener('input', renderDocument);
+    document.getElementById('doc-date').addEventListener('change', renderDocument);
 
     // Semak pengesahan PIN semasa mula dibuka
     window.onload = checkAuthOnLoad;
