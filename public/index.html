@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sistem Jana Sebut Harga Pelbagai Syarikat</title>
+  <title>Sistem Dokumen Korporat - Sebut Harga, DO & Invois</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Cinzel, Lora, Plus Jakarta Sans -->
@@ -18,7 +18,7 @@
     .font-mzr-body { font-family: 'Lora', serif; }
     .font-alt { font-family: 'Plus Jakarta Sans', sans-serif; }
 
-    /* Saiz responsif yang muat tepat pada nisbah A4 */
+    /* Saiz responsif yang muat tepat pada nisbah A4 tanpa terpotong */
     .a4-container {
       width: 100% !important;
       max-width: 760px !important;
@@ -79,10 +79,11 @@
 
   <!-- ================= 2. APLIKASI UTAMA (SPA) ================= -->
   <div id="main-app" class="p-4 md:p-8 hidden">
+    <!-- Bar Atas Status & Log Keluar -->
     <div class="max-w-7xl mx-auto flex justify-between items-center mb-6 pb-4 border-b border-slate-200">
       <div class="flex items-center gap-2">
         <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-        <span class="text-xs font-semibold text-slate-600">Sistem Sebut Harga Cloud Aktif</span>
+        <span class="text-xs font-semibold text-slate-600">Sistem Dokumen Perniagaan Cloud Aktif</span>
       </div>
       <button onclick="handleLogout()" class="text-xs font-medium text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 py-1.5 px-3 rounded-lg transition">
         Log Keluar
@@ -92,38 +93,60 @@
     <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
 
       <!-- BAHAGIAN BORANG KAWALAN (KIRI) -->
-      <div class="lg:col-span-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6 self-start">
-        <div class="border-b pb-4">
-          <h1 class="text-xl font-black text-slate-900 tracking-tight">Penjana Sebut Harga</h1>
-          <p class="text-xs text-slate-500 mt-1">Siri sebut harga atomik dan dwitema korporat</p>
+      <div class="lg:col-span-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-5 self-start">
+        <div class="border-b pb-3">
+          <h1 class="text-xl font-black text-slate-900 tracking-tight">Penjana Dokumen</h1>
+          <p class="text-xs text-slate-500 mt-0.5">Sebut Harga (QUOT), Delivery Order (DO) & Invois (INV)</p>
         </div>
 
         <!-- Pemilihan Syarikat -->
         <div>
           <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Entiti Perniagaan</label>
-          <div class="grid grid-cols-1 gap-2.5">
+          <div class="grid grid-cols-1 gap-2">
             <button type="button" id="btn-comp-mzr" onclick="setCompany('MZR')"
-              class="p-3 border-2 rounded-xl text-left transition-all border-emerald-700 bg-emerald-50 text-emerald-950 font-semibold flex items-center justify-between">
+              class="p-2.5 border-2 rounded-xl text-left transition-all border-emerald-700 bg-emerald-50 text-emerald-950 font-semibold flex items-center justify-between">
               <div>
                 <p class="text-sm font-bold">Mirzaquan Resources</p>
                 <p class="text-[11px] text-emerald-700 font-normal">Format Klasik / Korporat Berkanun</p>
               </div>
-              <span class="text-xs px-2 py-0.5 bg-emerald-200 text-emerald-900 rounded font-mono">MZR/QT</span>
+              <span class="text-xs px-2 py-0.5 bg-emerald-200 text-emerald-900 rounded font-mono">MZR</span>
             </button>
 
             <button type="button" id="btn-comp-alt" onclick="setCompany('ALT')"
-              class="p-3 border-2 rounded-xl text-left transition-all border-slate-200 hover:border-slate-300 text-slate-700 font-semibold flex items-center justify-between">
+              class="p-2.5 border-2 rounded-xl text-left transition-all border-slate-200 hover:border-slate-300 text-slate-700 font-semibold flex items-center justify-between">
               <div>
                 <p class="text-sm font-bold">Axis Logistics Technologies</p>
                 <p class="text-[11px] text-slate-500 font-normal">Format Digital Tech / Minimalis</p>
               </div>
-              <span class="text-xs px-2 py-0.5 bg-slate-100 text-slate-700 rounded font-mono">ALT/EST</span>
+              <span class="text-xs px-2 py-0.5 bg-slate-100 text-slate-700 rounded font-mono">ALT</span>
             </button>
           </div>
         </div>
 
+        <!-- Pemilihan Jenis Dokumen -->
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Jenis Dokumen</label>
+          <div class="grid grid-cols-3 gap-2">
+            <button type="button" onclick="setDocType('QUOT')" id="btn-doc-quot" class="py-2 text-xs font-bold rounded-lg border-2 border-slate-900 bg-slate-900 text-white transition">Sebut Harga</button>
+            <button type="button" onclick="setDocType('DO')" id="btn-doc-do" class="py-2 text-xs font-bold rounded-lg border-2 border-slate-200 text-slate-700 hover:border-slate-300 transition">D.O.</button>
+            <button type="button" onclick="setDocType('INV')" id="btn-doc-inv" class="py-2 text-xs font-bold rounded-lg border-2 border-slate-200 text-slate-700 hover:border-slate-300 transition">Invois</button>
+          </div>
+        </div>
+
+        <!-- Bahagian Muat Rekod Pelanggan Lama (Auto-Tampil bila pilih DO atau INV) -->
+        <div id="section-load-quote" class="hidden p-3 bg-blue-50 border border-blue-200 rounded-xl space-y-1.5">
+          <label class="block text-xs font-bold text-blue-950 flex items-center justify-between">
+            <span>Tarik Data Sebut Harga Terdahulu:</span>
+            <button type="button" onclick="fetchSavedQuotations()" class="text-[10px] text-blue-600 hover:underline font-normal">Segarkan</button>
+          </label>
+          <select id="saved-quote-dropdown" onchange="loadQuotationToForm(this.value)" class="w-full text-xs p-2 rounded-lg border border-blue-300 bg-white outline-none">
+            <option value="">-- Sedang memuatkan senarai... --</option>
+          </select>
+          <p class="text-[10px] text-blue-700">Pilih pelanggan untuk mengisi semula butiran automatik bagi DO/Invois.</p>
+        </div>
+
         <!-- Maklumat Penerima -->
-        <div class="space-y-3">
+        <div class="space-y-2.5">
           <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Maklumat Pelanggan / Klien</label>
           <input type="text" id="cust-name" placeholder="Nama Syarikat / Jabatan"
             class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-slate-400 outline-none text-sm"
@@ -140,34 +163,34 @@
           </select>
         </div>
 
-        <!-- Kuantiti & Tempoh Sah -->
+        <!-- Kuantiti & Tempoh Sah / Tarikh Matang -->
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Kuantiti</label>
             <input type="number" id="item-qty" value="1" min="1"
               class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-slate-400 outline-none text-sm" />
           </div>
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
+          <div id="wrapper-validity">
+            <label id="label-validity" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">
               Tempoh Sah <span class="text-[10px] text-slate-400 font-normal">(0 = "-")</span>
             </label>
-            <input type="text" id="quote-validity" value="0" placeholder="cth: 30 Hari atau 0"
+            <input type="text" id="quote-validity" value="30 Hari" placeholder="cth: 30 Hari atau 0"
               class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-slate-400 outline-none text-sm" />
           </div>
         </div>
 
         <!-- Butang Jana & Muat Turun -->
-        <div class="pt-3 space-y-3">
-          <button id="btn-download" onclick="executeQuotationWorkflow()"
+        <div class="pt-2 space-y-2">
+          <button id="btn-download" onclick="executeDocumentWorkflow()"
             class="w-full bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-bold py-3.5 px-4 rounded-xl transition text-sm shadow flex items-center justify-center gap-2">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
             </svg>
-            <span id="btn-label">Kunci No. Siri & Muat Turun PDF</span>
+            <span id="btn-label">Kunci No. Siri & Muat Turun Dokumen</span>
           </button>
 
           <p class="text-[11px] text-slate-400 text-center leading-relaxed">
-            * Nombor siri dikunci dan dinaikkan secara automatik di pelayan cloud sebelum dokumen PDF dijana.
+            * Data dan nombor siri disimpan secara atomik ke Upstash Redis supaya boleh dipanggil semula untuk DO & Invois.
           </p>
         </div>
       </div>
@@ -175,7 +198,7 @@
       <!-- BAHAGIAN KERTAS DOKUMEN (KANAN) -->
       <div class="lg:col-span-8 flex justify-center items-start overflow-x-auto p-2">
         <div id="quotation-paper" class="a4-container bg-white shadow-xl flex flex-col justify-between">
-          <!-- Disuntik secara dinamik oleh renderQuotation() -->
+          <!-- Disuntik secara dinamik oleh renderDocument() -->
         </div>
       </div>
 
@@ -240,30 +263,42 @@
       }
     }
 
-    // ================= 2. DATA ENTITI SYARIKAT =================
+    // ================= 2. DATA ENTITI SYARIKAT & MOD DOKUMEN =================
     const companyData = {
       MZR: {
         code: "MZR",
         name: "MIRZAQUAN RESOURCES",
         address: "LOT 2130-19 JALAN CHANGKAT, SIMPANG 3 GOMBAK,\n53100 KUALA LUMPUR, SELANGOR.",
         tel: "013-306 4618",
+        bank: "MAYBANK: 5642-7654-1234 (Mirzaquan Resources)",
         logo: "logoMZR.png",
-        prefix: "MZR/QT"
+        prefixes: {
+          QUOT: "MZR/QT",
+          DO: "MZR/DO",
+          INV: "MZR/INV"
+        }
       },
       ALT: {
         code: "ALT",
         name: "AXIS LOGISTICS TECHNOLOGIES",
         address: "B-3A-22, PUSAT DAGANGAN PELANGI,\nPELANGI DAMANSARA PJU 6,\n47800 PETALING JAYA, SELANGOR, MALAYSIA.",
         tel: "03-83290277",
+        bank: "CIMB BANK: 8603-4567-8901 (Axis Logistics Technologies)",
         logo: "logoALT.png",
-        prefix: "ALT/EST"
+        prefixes: {
+          QUOT: "ALT/EST",
+          DO: "ALT/DO",
+          INV: "ALT/INV"
+        }
       }
     };
 
     let currentCompany = 'MZR';
+    let currentDocType = 'QUOT'; // 'QUOT' | 'DO' | 'INV'
     let availableItems = [];
+    let linkedQuoteNo = null; // Menyimpan nombor rujukan sebut harga bagi DO/Invois
 
-    // ================= 3. BACA DATA ITEM =================
+    // ================= 3. BACA DATA ITEM DARI item.json =================
     async function loadItems() {
       try {
         const response = await fetch('item.json');
@@ -274,7 +309,7 @@
         availableItems = [
           {
             "value": "OPT-001",
-            "label": "Lenovo Yoga Slim 7i (Gen 9) [Core Ultra 7, 16GB, 1TB SSD, 14\" OLED] - RM4,999",
+            "label": "Lenovo Yoga Slim 7i (Gen 9) [Core Ultra 7, 16GB, 1TB SSD, 14" OLED] - RM4,999",
             "type": "laptop_only",
             "brand": "Lenovo",
             "model": "Yoga Slim 7i (Gen 9)",
@@ -284,7 +319,7 @@
               "ram": "16GB LPDDR5X-7467MHz",
               "gpu": "Intel Arc Graphics",
               "storage": "1TB M.2 NVMe PCIe 4.0 SSD",
-              "display": "14.0\" WUXGA (1920x1200) OLED 120Hz",
+              "display": "14.0" WUXGA (1920x1200) OLED 120Hz",
               "os": "Windows 11 Home"
             }
           },
@@ -300,14 +335,14 @@
               "ram": "16GB DDR5-5200MHz",
               "gpu": "NVIDIA GeForce RTX 4060 8GB GDDR6",
               "storage": "1TB M.2 NVMe PCIe 4.0 SSD",
-              "display": "15.6\" FHD 144Hz IPS",
+              "display": "15.6" FHD 144Hz IPS",
               "os": "Windows 11 Home"
             }
           }
         ];
       }
       populateDropdown();
-      renderQuotation();
+      renderDocument();
     }
 
     function populateDropdown() {
@@ -317,25 +352,109 @@
       `).join('');
     }
 
-    // ================= 4. PERTUKARAN TEMA SYARIKAT =================
+    // ================= 4. PERTUKARAN TEMA SYARIKAT & JENIS DOKUMEN =================
     function setCompany(code) {
       currentCompany = code;
       const btnMzr = document.getElementById('btn-comp-mzr');
       const btnAlt = document.getElementById('btn-comp-alt');
 
       if (code === 'MZR') {
-        btnMzr.className = "p-3 border-2 rounded-xl text-left transition-all border-emerald-700 bg-emerald-50 text-emerald-950 font-semibold flex items-center justify-between";
-        btnAlt.className = "p-3 border-2 rounded-xl text-left transition-all border-slate-200 hover:border-slate-300 text-slate-700 font-semibold flex items-center justify-between";
+        btnMzr.className = "p-2.5 border-2 rounded-xl text-left transition-all border-emerald-700 bg-emerald-50 text-emerald-950 font-semibold flex items-center justify-between";
+        btnAlt.className = "p-2.5 border-2 rounded-xl text-left transition-all border-slate-200 hover:border-slate-300 text-slate-700 font-semibold flex items-center justify-between";
       } else {
-        btnAlt.className = "p-3 border-2 rounded-xl text-left transition-all border-blue-800 bg-blue-50 text-blue-950 font-semibold flex items-center justify-between";
-        btnMzr.className = "p-3 border-2 rounded-xl text-left transition-all border-slate-200 hover:border-slate-300 text-slate-700 font-semibold flex items-center justify-between";
+        btnAlt.className = "p-2.5 border-2 rounded-xl text-left transition-all border-blue-800 bg-blue-50 text-blue-950 font-semibold flex items-center justify-between";
+        btnMzr.className = "p-2.5 border-2 rounded-xl text-left transition-all border-slate-200 hover:border-slate-300 text-slate-700 font-semibold flex items-center justify-between";
       }
 
-      renderQuotation();
+      if (currentDocType !== 'QUOT') {
+        fetchSavedQuotations();
+      }
+
+      renderDocument();
     }
 
-    // ================= 5. PAPARAN DUA SUSUN ATUR DOKUMEN =================
-    function renderQuotation() {
+    async function setDocType(type) {
+      currentDocType = type;
+
+      ['QUOT', 'DO', 'INV'].forEach(t => {
+        const btn = document.getElementById(`btn-doc-${t.toLowerCase()}`);
+        if (t === type) {
+          btn.className = "py-2 text-xs font-bold rounded-lg border-2 border-slate-900 bg-slate-900 text-white transition";
+        } else {
+          btn.className = "py-2 text-xs font-bold rounded-lg border-2 border-slate-200 text-slate-700 hover:border-slate-300 transition";
+        }
+      });
+
+      const loadSection = document.getElementById('section-load-quote');
+      const labelValidity = document.getElementById('label-validity');
+      const quoteValInput = document.getElementById('quote-validity');
+
+      if (type === 'QUOT') {
+        loadSection.classList.add('hidden');
+        labelValidity.innerHTML = 'Tempoh Sah <span class="text-[10px] text-slate-400 font-normal">(0 = "-")</span>';
+        quoteValInput.value = "30 Hari";
+        linkedQuoteNo = null;
+      } else if (type === 'DO') {
+        loadSection.classList.remove('hidden');
+        labelValidity.innerHTML = 'No. Kenderaan / Catatan Penghantaran';
+        quoteValInput.value = "Lori Sendiri / Serahan Tangan";
+        await fetchSavedQuotations();
+      } else if (type === 'INV') {
+        loadSection.classList.remove('hidden');
+        labelValidity.innerHTML = 'Terma Bayaran (Due Date)';
+        quoteValInput.value = "30 Hari / Bersih";
+        await fetchSavedQuotations();
+      }
+
+      renderDocument();
+    }
+
+    // ================= 5. AMBIL & ISI DATA SEBUT HARGA DARI REDIS =================
+    async function fetchSavedQuotations() {
+      const comp = companyData[currentCompany];
+      const dropdown = document.getElementById('saved-quote-dropdown');
+      dropdown.innerHTML = '<option value="">Sedang memuat senarai sebut harga...</option>';
+
+      try {
+        const res = await fetch(`/api/quotations?companyCode=${comp.code}`);
+        const result = await res.json();
+
+        if (result.list && result.list.length > 0) {
+          dropdown.innerHTML = '<option value="">-- Pilih Rekod Pelanggan / Sebut Harga --</option>' +
+            result.list.map(q => `<option value="${q.quoteNo}">${q.quoteNo} - ${q.custName}</option>`).join('');
+        } else {
+          dropdown.innerHTML = '<option value="">Tiada rekod sebut harga terdahulu ditemui</option>';
+        }
+      } catch (err) {
+        console.warn("Gagal menghubungi API quotations:", err);
+        dropdown.innerHTML = '<option value="">(API /api/quotations belum sedia)</option>';
+      }
+    }
+
+    async function loadQuotationToForm(quoteNo) {
+      if (!quoteNo) return;
+      try {
+        const res = await fetch(`/api/quotations?quoteNo=${encodeURIComponent(quoteNo)}`);
+        const result = await res.json();
+        if (result.data) {
+          const q = result.data;
+          document.getElementById('cust-name').value = q.customer.name;
+          document.getElementById('cust-address').value = q.customer.address;
+          document.getElementById('item-qty').value = q.quantity;
+          linkedQuoteNo = q.quoteNo;
+
+          if (q.item && q.item.value) {
+            document.getElementById('item-dropdown').value = q.item.value;
+          }
+          renderDocument();
+        }
+      } catch (err) {
+        alert("Gagal memuat data sebut harga: " + err.message);
+      }
+    }
+
+    // ================= 6. PAPARAN DOKUMEN (QUOTATION / DO / INVOICE) =================
+    function renderDocument() {
       const paper = document.getElementById('quotation-paper');
       const comp = companyData[currentCompany];
       const selectedValue = document.getElementById('item-dropdown').value;
@@ -345,20 +464,37 @@
       const custName = document.getElementById('cust-name').value || 'Nama Pelanggan';
       const custAddress = document.getElementById('cust-address').value || 'Alamat Pelanggan';
 
-      // Logik Tempoh Sah: 0 = "-"
       const rawValidity = document.getElementById('quote-validity').value.trim();
       let validityText = rawValidity;
-      if (rawValidity === '0' || rawValidity.toLowerCase() === '0 hari' || rawValidity.toLowerCase() === 'unlimited' || !rawValidity) {
-        validityText = "-";
+      if (currentDocType === 'QUOT') {
+        if (rawValidity === '0' || rawValidity.toLowerCase() === '0 hari' || rawValidity.toLowerCase() === 'unlimited' || !rawValidity) {
+          validityText = "-";
+        }
       }
 
       const today = new Date().toLocaleDateString('ms-MY', { day: '2-digit', month: '2-digit', year: 'numeric' });
       const year = new Date().getFullYear();
-      const placeholderNo = `${comp.prefix}/${year}/----`;
+      const currentPrefix = comp.prefixes[currentDocType];
+      const placeholderNo = `${currentPrefix}/${year}/----`;
       const subtotal = item ? item.price * qty : 0;
 
+      // Label tajuk dokumen
+      let docTitleMZR = "SEBUT HARGA RASMI";
+      let docTitleALT = "QUOTATION";
+      let docNoLabel = "No. Sebut Harga";
+
+      if (currentDocType === 'DO') {
+        docTitleMZR = "NOTA PENGHANTARAN (DELIVERY ORDER)";
+        docTitleALT = "DELIVERY ORDER";
+        docNoLabel = "No. D.O.";
+      } else if (currentDocType === 'INV') {
+        docTitleMZR = "INVOIS RASMI";
+        docTitleALT = "TAX INVOICE";
+        docNoLabel = "No. Invois";
+      }
+
       if (currentCompany === 'MZR') {
-        // TEMPLAT 1: MIRZAQUAN RESOURCES (Tradisional Klasik)
+        // ================= TEMPLAT 1: MIRZAQUAN RESOURCES =================
         paper.className = "a4-container bg-[#fffdfa] p-8 font-mzr-body text-stone-900 flex flex-col justify-between shadow-md";
         paper.innerHTML = `
           <div>
@@ -377,7 +513,7 @@
             <!-- Tajuk Dokumen -->
             <div class="text-center my-4">
               <h3 class="font-mzr-title text-base font-bold tracking-widest uppercase underline decoration-emerald-800 decoration-1 underline-offset-4 text-stone-900">
-                SEBUT HARGA RASMI
+                ${docTitleMZR}
               </h3>
             </div>
 
@@ -390,9 +526,10 @@
               </div>
               <div class="border border-stone-400 p-2.5 bg-stone-50/50 flex flex-col justify-between">
                 <div class="space-y-0.5">
-                  <div class="flex justify-between"><span class="text-stone-600">No. Sebut Harga:</span> <span class="font-mono font-bold text-emerald-950 text-xs" id="active-quote-no">${placeholderNo}</span></div>
-                  <div class="flex justify-between"><span class="text-stone-600">Tarikh Dikeluarkan:</span> <span>${today}</span></div>
-                  <div class="flex justify-between"><span class="text-stone-600">Tempoh Sah:</span> <span class="font-semibold text-stone-900">${validityText}</span></div>
+                  <div class="flex justify-between"><span class="text-stone-600">${docNoLabel}:</span> <span class="font-mono font-bold text-emerald-950 text-xs" id="active-quote-no">${placeholderNo}</span></div>
+                  <div class="flex justify-between"><span class="text-stone-600">Tarikh:</span> <span>${today}</span></div>
+                  ${linkedQuoteNo ? `<div class="flex justify-between text-blue-900 font-semibold"><span>Rujukan Sebut Harga:</span> <span>${linkedQuoteNo}</span></div>` : ''}
+                  <div class="flex justify-between"><span class="text-stone-600">${currentDocType === 'DO' ? 'Maklumat Serahan:' : (currentDocType === 'INV' ? 'Terma Bayaran:' : 'Tempoh Sah:')}</span> <span class="font-semibold text-stone-900">${validityText}</span></div>
                 </div>
                 <div class="text-right text-[9px] text-stone-500 italic mt-1">Matawang: Ringgit Malaysia (MYR)</div>
               </div>
@@ -405,8 +542,12 @@
                   <th class="border border-stone-400 p-2 text-center w-10">BIL</th>
                   <th class="border border-stone-400 p-2 text-left">PERIHAL BARANGAN / SPESIFIKASI</th>
                   <th class="border border-stone-400 p-2 text-center w-14">KUANTITI</th>
-                  <th class="border border-stone-400 p-2 text-right w-24">HARGA SEUNIT (RM)</th>
-                  <th class="border border-stone-400 p-2 text-right w-24">JUMLAH (RM)</th>
+                  ${currentDocType !== 'DO' ? `
+                    <th class="border border-stone-400 p-2 text-right w-24">HARGA SEUNIT</th>
+                    <th class="border border-stone-400 p-2 text-right w-24">JUMLAH (RM)</th>
+                  ` : `
+                    <th class="border border-stone-400 p-2 text-center w-32">STATUS SERAHAN</th>
+                  `}
                 </tr>
               </thead>
               <tbody>
@@ -417,40 +558,46 @@
 
           <!-- Bahagian Bawah / Ringkasan & Signoff -->
           <div class="pt-2">
-            <div class="flex justify-end mb-4">
-              <table class="w-56 text-[11px] border border-stone-400">
-                <tr>
-                  <td class="p-1.5 bg-stone-100 font-semibold border-b border-stone-300">Jumlah Kasar:</td>
-                  <td class="p-1.5 text-right border-b border-stone-300">RM ${subtotal.toLocaleString('en-MY', { minimumFractionDigits: 2 })}</td>
-                </tr>
-                <tr>
-                  <td class="p-1.5 bg-stone-100 font-semibold border-b border-stone-300">Cukai (0%):</td>
-                  <td class="p-1.5 text-right border-b border-stone-300">RM 0.00</td>
-                </tr>
-                <tr class="bg-emerald-900 text-white font-bold text-xs">
-                  <td class="p-2">JUMLAH BESAR:</td>
-                  <td class="p-2 text-right">RM ${subtotal.toLocaleString('en-MY', { minimumFractionDigits: 2 })}</td>
-                </tr>
-              </table>
-            </div>
+            ${currentDocType !== 'DO' ? `
+              <div class="flex justify-end mb-4">
+                <table class="w-56 text-[11px] border border-stone-400">
+                  <tr>
+                    <td class="p-1.5 bg-stone-100 font-semibold border-b border-stone-300">Jumlah Kasar:</td>
+                    <td class="p-1.5 text-right border-b border-stone-300 font-mono">RM ${subtotal.toLocaleString('en-MY', { minimumFractionDigits: 2 })}</td>
+                  </tr>
+                  <tr>
+                    <td class="p-1.5 bg-stone-100 font-semibold border-b border-stone-300">Cukai (0%):</td>
+                    <td class="p-1.5 text-right border-b border-stone-300 font-mono">RM 0.00</td>
+                  </tr>
+                  <tr class="bg-emerald-900 text-white font-bold text-xs">
+                    <td class="p-2">JUMLAH BESAR:</td>
+                    <td class="p-2 text-right font-mono">RM ${subtotal.toLocaleString('en-MY', { minimumFractionDigits: 2 })}</td>
+                  </tr>
+                </table>
+              </div>
+            ` : `
+              <div class="p-3 bg-stone-50 border border-stone-300 rounded text-[11px] text-stone-700 mb-4 leading-relaxed">
+                Perakuan: Barangan di atas telah diterima dalam keadaan baik, sempurna dan lengkap mengikut spesifikasi pesanan.
+              </div>
+            `}
 
             <div class="grid grid-cols-2 gap-6 text-[10px] border-t border-stone-300 pt-3">
               <div class="text-stone-600 space-y-0.5 leading-snug">
                 <p class="font-bold text-stone-800 underline">SYARAT & TERMA:</p>
-                <p>1. Bayaran cek/pindahan bank kepada: <b>MIRZAQUAN RESOURCES</b>.</p>
-                <p>2. Penghantaran dalam tempoh 7-14 hari bekerja dari tarikh PO.</p>
+                <p>1. Bayaran cek/pindahan bank: <b>${comp.bank}</b>.</p>
+                <p>2. Sebarang percanggahan hendaklah dimaklumkan dalam masa 3 hari bekerja.</p>
               </div>
               <div class="text-center">
-                <p class="text-stone-500 mb-8">Disediakan dan disahkan oleh,</p>
+                <p class="text-stone-500 mb-8">${currentDocType === 'DO' ? 'Diterima oleh (Tandatangan & Cop Penerima):' : 'Disediakan dan disahkan oleh,'}</p>
                 <div class="border-b border-stone-800 w-40 mx-auto"></div>
-                <p class="font-bold text-stone-900 mt-0.5 uppercase text-[10px]">Pegawai Bertanggungjawab</p>
-                <p class="text-[9px] text-stone-500">${comp.name}</p>
+                <p class="font-bold text-stone-900 mt-0.5 uppercase text-[10px]">${currentDocType === 'DO' ? 'Tandatangan Penerima' : 'Pegawai Bertanggungjawab'}</p>
+                <p class="text-[9px] text-stone-500">${currentDocType === 'DO' ? 'Nama & Tarikh' : comp.name}</p>
               </div>
             </div>
           </div>
         `;
       } else {
-        // TEMPLAT 2: AXIS LOGISTICS TECHNOLOGIES (Modern Tech Minimalis)
+        // ================= TEMPLAT 2: AXIS LOGISTICS TECHNOLOGIES =================
         paper.className = "a4-container bg-white font-alt text-slate-800 flex flex-col justify-between shadow-xl";
         paper.innerHTML = `
           <div>
@@ -467,7 +614,7 @@
                 </div>
               </div>
               <div class="text-right">
-                <span class="text-2xl font-black tracking-widest text-slate-100">QUOTATION</span>
+                <span class="text-2xl font-black tracking-widest text-slate-100">${docTitleALT}</span>
                 <p class="text-[11px] font-mono text-blue-400 mt-0.5" id="active-quote-no">${placeholderNo}</p>
               </div>
             </div>
@@ -485,8 +632,9 @@
                     <span class="text-slate-400 text-[10px] block">TARIKH</span>
                     <span class="font-bold text-slate-800">${today}</span>
                   </div>
+                  ${linkedQuoteNo ? `<div><span class="text-slate-400 text-[10px] block">RUJUKAN QUOTATION</span><span class="font-bold text-blue-600">${linkedQuoteNo}</span></div>` : ''}
                   <div class="pt-1">
-                    <span class="text-slate-400 text-[10px] block">TEMPOH SAH</span>
+                    <span class="text-slate-400 text-[10px] block">${currentDocType === 'DO' ? 'KAEDAH SERAHAN' : (currentDocType === 'INV' ? 'TEMPOH BAYARAN' : 'TEMPOH SAH')}</span>
                     <span class="inline-block px-2 py-0.5 bg-slate-100 text-slate-800 font-bold rounded text-[10px] font-mono">${validityText}</span>
                   </div>
                 </div>
@@ -498,8 +646,12 @@
                   <tr class="text-slate-400 text-[10px] font-bold border-b border-slate-200 uppercase tracking-wider">
                     <th class="py-2 px-2 text-left">ITEM & DESKRIPSI SISTEM</th>
                     <th class="py-2 px-2 text-center w-14">UNIT</th>
-                    <th class="py-2 px-2 text-right w-24">KADAR (RM)</th>
-                    <th class="py-2 px-2 text-right w-24">JUMLAH (RM)</th>
+                    ${currentDocType !== 'DO' ? `
+                      <th class="py-2 px-2 text-right w-24">KADAR (RM)</th>
+                      <th class="py-2 px-2 text-right w-24">JUMLAH (RM)</th>
+                    ` : `
+                      <th class="py-2 px-2 text-center w-32">PENGESAHAN ITEM</th>
+                    `}
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-100">
@@ -511,33 +663,39 @@
 
           <!-- Bahagian Bawah ALT -->
           <div class="p-6 pt-0">
-            <div class="flex justify-end pt-2 border-t border-slate-200">
-              <div class="w-60 space-y-1.5 text-[11px]">
-                <div class="flex justify-between text-slate-500">
-                  <span>Sub-Jumlah:</span>
-                  <span class="font-mono">RM ${subtotal.toLocaleString('en-MY', { minimumFractionDigits: 2 })}</span>
-                </div>
-                <div class="flex justify-between text-slate-500">
-                  <span>SST (0%):</span>
-                  <span class="font-mono">RM 0.00</span>
-                </div>
-                <div class="flex justify-between items-center text-xs font-black text-slate-900 border-t border-slate-200 pt-1.5">
-                  <span>JUMLAH KESELURUHAN:</span>
-                  <span class="text-blue-700 text-sm font-mono">RM ${subtotal.toLocaleString('en-MY', { minimumFractionDigits: 2 })}</span>
+            ${currentDocType !== 'DO' ? `
+              <div class="flex justify-end pt-2 border-t border-slate-200">
+                <div class="w-60 space-y-1.5 text-[11px]">
+                  <div class="flex justify-between text-slate-500">
+                    <span>Sub-Jumlah:</span>
+                    <span class="font-mono">RM ${subtotal.toLocaleString('en-MY', { minimumFractionDigits: 2 })}</span>
+                  </div>
+                  <div class="flex justify-between text-slate-500">
+                    <span>SST (0%):</span>
+                    <span class="font-mono">RM 0.00</span>
+                  </div>
+                  <div class="flex justify-between items-center text-xs font-black text-slate-900 border-t border-slate-200 pt-1.5">
+                    <span>JUMLAH KESELURUHAN:</span>
+                    <span class="text-blue-700 text-sm font-mono">RM ${subtotal.toLocaleString('en-MY', { minimumFractionDigits: 2 })}</span>
+                  </div>
                 </div>
               </div>
-            </div>
+            ` : `
+              <div class="p-2.5 bg-slate-50 rounded border border-slate-200 text-[10px] text-slate-600 mb-3">
+                Barangan diterima dalam keadaan sempurna dan baik. Sila tandatangan untuk perakuan serahan.
+              </div>
+            `}
 
             <!-- Footer Tanda Tangan -->
             <div class="mt-6 pt-4 border-t border-slate-100 flex justify-between items-end text-[10px] text-slate-400">
               <div class="space-y-0.5">
-                <p class="font-semibold text-slate-700">Terma Sistem Digital:</p>
-                <p>Dokumen ini dijana secara elektronik oleh sistem Axis Logistics Tech.</p>
-                <p>Sila kemukakan pesanan rasmi (PO) untuk pengesahan pembekalan.</p>
+                <p class="font-semibold text-slate-700">${currentDocType === 'INV' ? 'Maklumat Transaksi Perbankan:' : 'Terma Sistem Digital:'}</p>
+                <p class="font-mono text-slate-600">${comp.bank}</p>
+                <p>Dokumen ini dijana secara elektronik oleh sistem ${comp.name}.</p>
               </div>
               <div class="text-right">
                 <div class="w-36 border-b border-slate-300 mb-1"></div>
-                <p class="font-medium text-slate-600">Pengesahan Wakil Syarikat</p>
+                <p class="font-medium text-slate-600">${currentDocType === 'DO' ? 'Tandatangan Penerima Klien' : 'Pengesahan Wakil Syarikat'}</p>
               </div>
             </div>
           </div>
@@ -565,8 +723,12 @@
               </div>
             </td>
             <td class="border border-stone-400 p-2 text-center font-bold">${qty}</td>
-            <td class="border border-stone-400 p-2 text-right font-mono">${item.price.toFixed(2)}</td>
-            <td class="border border-stone-400 p-2 text-right font-mono font-bold">${total.toFixed(2)}</td>
+            ${currentDocType !== 'DO' ? `
+              <td class="border border-stone-400 p-2 text-right font-mono">${item.price.toFixed(2)}</td>
+              <td class="border border-stone-400 p-2 text-right font-mono font-bold">${total.toFixed(2)}</td>
+            ` : `
+              <td class="border border-stone-400 p-2 text-center text-emerald-900 font-bold">[ DIHANTAR ]</td>
+            `}
           </tr>
         `;
       } else {
@@ -587,8 +749,12 @@
               </div>
             </td>
             <td class="border border-stone-400 p-2 text-center font-bold">${qty}</td>
-            <td class="border border-stone-400 p-2 text-right font-mono">${item.price.toFixed(2)}</td>
-            <td class="border border-stone-400 p-2 text-right font-mono font-bold">${total.toFixed(2)}</td>
+            ${currentDocType !== 'DO' ? `
+              <td class="border border-stone-400 p-2 text-right font-mono">${item.price.toFixed(2)}</td>
+              <td class="border border-stone-400 p-2 text-right font-mono font-bold">${total.toFixed(2)}</td>
+            ` : `
+              <td class="border border-stone-400 p-2 text-center text-emerald-900 font-bold">[ DIHANTAR ]</td>
+            `}
           </tr>
         `;
       }
@@ -613,8 +779,12 @@
               </div>
             </td>
             <td class="py-3 px-2 text-center font-semibold text-slate-700">${qty}</td>
-            <td class="py-3 px-2 text-right font-mono text-slate-700">${item.price.toFixed(2)}</td>
-            <td class="py-3 px-2 text-right font-mono font-bold text-slate-900">${total.toFixed(2)}</td>
+            ${currentDocType !== 'DO' ? `
+              <td class="py-3 px-2 text-right font-mono text-slate-700">${item.price.toFixed(2)}</td>
+              <td class="py-3 px-2 text-right font-mono font-bold text-slate-900">${total.toFixed(2)}</td>
+            ` : `
+              <td class="py-3 px-2 text-center text-blue-700 font-bold">[ DELIVERED ]</td>
+            `}
           </tr>
         `;
       } else {
@@ -634,18 +804,23 @@
               </div>
             </td>
             <td class="py-3 px-2 text-center font-semibold text-slate-700">${qty}</td>
-            <td class="py-3 px-2 text-right font-mono text-slate-700">${item.price.toFixed(2)}</td>
-            <td class="py-3 px-2 text-right font-mono font-bold text-slate-900">${total.toFixed(2)}</td>
+            ${currentDocType !== 'DO' ? `
+              <td class="py-3 px-2 text-right font-mono text-slate-700">${item.price.toFixed(2)}</td>
+              <td class="py-3 px-2 text-right font-mono font-bold text-slate-900">${total.toFixed(2)}</td>
+            ` : `
+              <td class="py-3 px-2 text-center text-blue-700 font-bold">[ DELIVERED ]</td>
+            `}
           </tr>
         `;
       }
     }
 
-    // ================= 6. ALUR KERJA JANA SIRI & MUAT TURUN PDF =================
-    async function executeQuotationWorkflow() {
+    // ================= 7. ALUR KERJA JANA SIRI, SIMPAN PELANGGAN & MUAT TURUN PDF =================
+    async function executeDocumentWorkflow() {
       const btn = document.getElementById('btn-download');
       const label = document.getElementById('btn-label');
       const comp = companyData[currentCompany];
+      const prefix = comp.prefixes[currentDocType];
 
       btn.disabled = true;
       label.textContent = "Mengunci No. Siri di Pelayan...";
@@ -655,23 +830,51 @@
         const res = await fetch('/api/get-quote-no', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prefix: comp.prefix })
+          body: JSON.stringify({ prefix: prefix })
         });
 
         const data = await res.json();
         if (!data.success) throw new Error(data.error || "Gagal menjana nombor siri");
 
-        const officialQuoteNo = data.quoteNo;
-        document.getElementById('active-quote-no').textContent = officialQuoteNo;
+        const officialDocNo = data.quoteNo;
+        document.getElementById('active-quote-no').textContent = officialDocNo;
+
+        // 2. Simpan rekod pelanggan & item ke Upstash Redis jika menjana Sebut Harga
+        const selectedValue = document.getElementById('item-dropdown').value;
+        const selectedItem = availableItems.find(i => i.value === selectedValue);
+        const qty = parseInt(document.getElementById('item-qty').value) || 1;
+
+        if (currentDocType === 'QUOT') {
+          try {
+            await fetch('/api/quotations', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                quoteNo: officialDocNo,
+                companyCode: comp.code,
+                date: new Date().toISOString(),
+                customer: {
+                  name: document.getElementById('cust-name').value,
+                  address: document.getElementById('cust-address').value
+                },
+                item: selectedItem,
+                quantity: qty,
+                totalAmount: selectedItem ? (selectedItem.price * qty) : 0
+              })
+            });
+          } catch (errSave) {
+            console.warn("Gagal simpan rekod ke senarai sebut harga:", errSave);
+          }
+        }
 
         label.textContent = "Menjana Dokumen PDF...";
 
-        // 2. Jana dan muat turun fail PDF (Tetapan skala automatik A4 standard)
+        // 3. Jana dan muat turun fail PDF (Tetapan skala kemas tanpa terpotong)
         const element = document.getElementById('quotation-paper');
-        const safeFileName = officialQuoteNo.replace(/[\/\\]/g, '_');
+        const safeFileName = officialDocNo.replace(/[\/\]/g, '_');
 
         const opt = {
-          margin: [8, 8, 8, 8], // Margin standard 8mm sekeliling
+          margin: [8, 8, 8, 8],
           filename: `${safeFileName}.pdf`,
           image: { type: 'jpeg', quality: 0.98 },
           html2canvas: {
@@ -691,20 +894,20 @@
         await html2pdf().set(opt).from(element).save();
 
       } catch (err) {
-        alert("Ralat semasa memproses sebut harga: " + err.message);
+        alert("Ralat semasa memproses dokumen: " + err.message);
       } finally {
         btn.disabled = false;
-        label.textContent = "Kunci No. Siri & Muat Turun PDF";
-        renderQuotation();
+        label.textContent = "Kunci No. Siri & Muat Turun Dokumen";
+        renderDocument();
       }
     }
 
     // Pendengar acara borang input
-    document.getElementById('item-dropdown').addEventListener('change', renderQuotation);
-    document.getElementById('item-qty').addEventListener('input', renderQuotation);
-    document.getElementById('cust-name').addEventListener('input', renderQuotation);
-    document.getElementById('cust-address').addEventListener('input', renderQuotation);
-    document.getElementById('quote-validity').addEventListener('input', renderQuotation);
+    document.getElementById('item-dropdown').addEventListener('change', renderDocument);
+    document.getElementById('item-qty').addEventListener('input', renderDocument);
+    document.getElementById('cust-name').addEventListener('input', renderDocument);
+    document.getElementById('cust-address').addEventListener('input', renderDocument);
+    document.getElementById('quote-validity').addEventListener('input', renderDocument);
 
     // Semak pengesahan PIN semasa mula dibuka
     window.onload = checkAuthOnLoad;
