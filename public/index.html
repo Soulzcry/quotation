@@ -6,7 +6,7 @@
   <title>Sistem Dokumen Korporat - Sebut Harga, DO, Invois & Resit</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Cinzel, Lora, Plus Jakarta Sans -->
+  <!-- Google Fonts: Cinzel, Lora, Plus Jakarta Sans, Space Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -290,10 +290,9 @@
       MZR: {
         code: "MZR",
         name: "MIRZAQUAN RESOURCES",
-        address: "LOT 2130-19 JALAN CHANGKAT, SIMPANG 3 GOMBAK,
-53100 KUALA LUMPUR, SELANGOR.",
+        address: "LOT 2130-19 JALAN CHANGKAT, SIMPANG 3 GOMBAK,\n53100 KUALA LUMPUR, SELANGOR.",
         tel: "013-306 4618",
-        bank: "CIMB BANK: 8603050677 (Mirzaquan Resources)",
+        bank: "MAYBANK: 5642-7654-1234 (Mirzaquan Resources)",
         logo: "logoMZR.png",
         prefixes: {
           QUOT: "MZR/QT",
@@ -305,11 +304,9 @@
       ALT: {
         code: "ALT",
         name: "AXIS LOGISTICS TECHNOLOGIES",
-        address: "B-3A-22, PUSAT DAGANGAN PELANGI,
-PELANGI DAMANSARA PJU 6,
-47800 PETALING JAYA, SELANGOR, MALAYSIA.",
+        address: "B-3A-22, PUSAT DAGANGAN PELANGI,\nPELANGI DAMANSARA PJU 6,\n47800 PETALING JAYA, SELANGOR, MALAYSIA.",
         tel: "03-83290277",
-        bank: "MAYBANK: 566010859912 (Axis Logistics Technologies)",
+        bank: "CIMB BANK: 8603-4567-8901 (Axis Logistics Technologies)",
         logo: "logoALT.png",
         prefixes: {
           QUOT: "ALT/EST",
@@ -994,7 +991,7 @@ PELANGI DAMANSARA PJU 6,
           const calculatedHeightMm = Math.max(140, Math.ceil((elementHeight * 25.4) / 96) + 10);
 
           opt = {
-            margin: [3, 2, 3, 2], // Margin minimal untuk thermal
+            margin: [3, 2, 3, 2],
             filename: `${safeFileName}_Resit.pdf`,
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: {
