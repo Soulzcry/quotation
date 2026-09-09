@@ -278,11 +278,44 @@
       window.location.reload();
     }
 
+    function getSessionToken() {
+      return sessionStorage.getItem('app_authenticated') || '';
+    }
+
+    function isSessionTokenValid(token) {
+      if (!token) return false;
+      const parts = token.split('.');
+      if (parts.length !== 3) return false;
+      const expiresAt = Number(parts[1]);
+      return Number.isFinite(expiresAt) && Date.now() <= expiresAt;
+    }
+
     function checkAuthOnLoad() {
-      const auth = sessionStorage.getItem('app_authenticated');
-      if (auth) {
+      if (isSessionTokenValid(getSessionToken())) {
         revealApp();
+      } else {
+        sessionStorage.removeItem('app_authenticated');
       }
+    }
+
+    async function apiFetch(url, options = {}) {
+      const token = getSessionToken();
+      const headers = {
+        ...(options.headers || {}),
+        Authorization: `Bearer ${token}`
+      };
+      if (options.body && !headers['Content-Type']) {
+        headers['Content-Type'] = 'application/json';
+      }
+
+      const res = await fetch(url, { ...options, headers });
+      if (res.status === 401) {
+        sessionStorage.removeItem('app_authenticated');
+        alert('Sesi telah tamat. Sila log masuk semula.');
+        window.location.reload();
+        throw new Error('Sesi tidak sah');
+      }
+      return res;
     }
 
     // ================= 2. DATA ENTITI SYARIKAT & MOD DOKUMEN =================
@@ -290,7 +323,7 @@
       MZR: {
         code: "MZR",
         name: "MIRZAQUAN RESOURCES",
-        address: "LOT 2130-19 JALAN CHANGKAT, SIMPANG 3 GOMBAK,\n53100 KUALA LUMPUR, SELANGOR.",
+        address: "LOT 2130-19 JALAN CHANGKAT, SIMPANG 3 GOMBAK,\n53100 GOMBAK, SELANGOR.",
         tel: "013-306 4618",
         bank: "CIMB BANK: 8603050677 (Mirzaquan Resources)",
         logo: "logoMZR.png",
@@ -333,11 +366,11 @@
         availableItems = [
           {
             "value": "OPT-001",
-            "label": "Lenovo Yoga Slim 7i (Gen 9) [Core Ultra 7, 16GB, 1TB SSD, 14-inci OLED] - RM4,999",
+            "label": "Lenovo Yoga Slim 7i (Gen 9) [Core Ultra 7, 16GB, 1TB SSD, 14-inci OLED] - RM5,000",
             "type": "laptop_only",
             "brand": "Lenovo",
             "model": "Yoga Slim 7i (Gen 9)",
-            "price": 4999.00,
+            "price": 5000.00,
             "specs": {
               "cpu": "Intel Core Ultra 7 155H (16-Core)",
               "ram": "16GB LPDDR5X-7467MHz",
@@ -450,7 +483,7 @@
       dropdown.innerHTML = '<option value="">Sedang memuat senarai sebut harga...</option>';
 
       try {
-        const res = await fetch(`/api/quotations?companyCode=${comp.code}`);
+        const res = await apiFetch(`/api/quotations?companyCode=${encodeURIComponent(comp.code)}`);
         const result = await res.json();
 
         if (result.list && result.list.length > 0) {
@@ -468,7 +501,7 @@
     async function loadQuotationToForm(quoteNo) {
       if (!quoteNo) return;
       try {
-        const res = await fetch(`/api/quotations?quoteNo=${encodeURIComponent(quoteNo)}`);
+        const res = await apiFetch(`/api/quotations?quoteNo=${encodeURIComponent(quoteNo)}`);
         const result = await res.json();
         if (result.data) {
           const q = result.data;
@@ -483,7 +516,9 @@
           renderDocument();
         }
       } catch (err) {
-        alert("Gagal memuat data sebut harga: " + err.message);
+        if (err.message !== 'Sesi tidak sah') {
+          alert("Gagal memuat data sebut harga: " + err.message);
+        }
       }
     }
 
@@ -936,9 +971,8 @@
 
       try {
         // 1. Minta nombor siri rasmi yang unik dari Upstash Redis
-        const res = await fetch('/api/get-quote-no', {
+        const res = await apiFetch('/api/get-quote-no', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ prefix: prefix })
         });
 
@@ -954,27 +988,30 @@
         const qty = parseInt(document.getElementById('item-qty').value) || 1;
         const docDate = document.getElementById('doc-date').value || new Date().toISOString();
 
-        if (currentDocType === 'QUOT') {
-          try {
-            await fetch('/api/quotations', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                quoteNo: officialDocNo,
-                companyCode: comp.code,
-                date: docDate,
-                customer: {
-                  name: document.getElementById('cust-name').value,
-                  address: document.getElementById('cust-address').value
-                },
-                item: selectedItem,
-                quantity: qty,
-                totalAmount: selectedItem ? (selectedItem.price * qty) : 0
-              })
-            });
-          } catch (errSave) {
-            console.warn("Gagal simpan rekod ke senarai sebut harga:", errSave);
+        try {
+          const saveRes = await apiFetch('/api/quotations', {
+            method: 'POST',
+            body: JSON.stringify({
+              quoteNo: officialDocNo,
+              companyCode: comp.code,
+              docType: currentDocType,
+              date: docDate,
+              linkedQuoteNo: linkedQuoteNo,
+              customer: {
+                name: document.getElementById('cust-name').value,
+                address: document.getElementById('cust-address').value
+              },
+              item: selectedItem,
+              quantity: qty,
+              totalAmount: selectedItem ? (selectedItem.price * qty) : 0
+            })
+          });
+          if (!saveRes.ok) {
+            console.warn("Gagal simpan rekod dokumen:", await saveRes.text());
           }
+        } catch (errSave) {
+          if (errSave.message === 'Sesi tidak sah') throw errSave;
+          console.warn("Gagal simpan rekod dokumen:", errSave);
         }
 
         label.textContent = "Menjana Dokumen PDF...";
@@ -1031,7 +1068,9 @@
         await html2pdf().set(opt).from(element).save();
 
       } catch (err) {
-        alert("Ralat semasa memproses dokumen: " + err.message);
+        if (err.message !== 'Sesi tidak sah') {
+          alert("Ralat semasa memproses dokumen: " + err.message);
+        }
       } finally {
         btn.disabled = false;
         label.textContent = "Kunci No. Siri & Muat Turun Dokumen";

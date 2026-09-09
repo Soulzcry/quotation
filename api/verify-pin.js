@@ -1,3 +1,5 @@
+import { createSessionToken, pinsMatch } from '../lib/session.js';
+
 export default function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Kaedah tidak dibenarkan' });
@@ -13,9 +15,11 @@ export default function handler(req, res) {
     });
   }
 
-  if (String(pin).trim() === String(correctPin).trim()) {
-    const sessionToken = Buffer.from(`session_auth_${Date.now()}`).toString('base64');
-    return res.status(200).json({ success: true, token: sessionToken });
+  if (pinsMatch(pin, correctPin)) {
+    return res.status(200).json({
+      success: true,
+      token: createSessionToken()
+    });
   }
 
   return res.status(401).json({ success: false, message: 'PIN tidak sah. Sila cuba lagi.' });

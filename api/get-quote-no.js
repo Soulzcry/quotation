@@ -1,11 +1,15 @@
+import { isAllowedPrefix, requireAuth } from '../lib/session.js';
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Kaedah tidak dibenarkan' });
   }
 
-  const { prefix } = req.body || {}; // Cth: 'MZR/QT', 'MZR/DO', 'ALT/INV', 'ALT/RC'
-  if (!prefix) {
-    return res.status(400).json({ error: 'Prefix dokumen diperlukan' });
+  if (!requireAuth(req, res)) return;
+
+  const { prefix } = req.body || {};
+  if (!isAllowedPrefix(prefix)) {
+    return res.status(400).json({ error: 'Prefix dokumen tidak sah' });
   }
 
   const year = new Date().getFullYear();
