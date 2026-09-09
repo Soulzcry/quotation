@@ -871,7 +871,7 @@
 
         // 3. Jana dan muat turun fail PDF (Tetapan skala kemas tanpa terpotong)
         const element = document.getElementById('quotation-paper');
-        const safeFileName = officialDocNo.replace(/[\/\]/g, '_');
+        const safeFileName = officialDocNo.replace(/[\/\\]/g, '_');
 
         const opt = {
           margin: [8, 8, 8, 8],
