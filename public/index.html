@@ -133,7 +133,7 @@
           </div>
         </div>
 
-        <!-- Bahagian Muat Rekod Pelanggan Lama (Auto-Tampil bila pilih DO atau INV) -->
+        <!-- Bahagian Muat Rekod Pelanggan Lama -->
         <div id="section-load-quote" class="hidden p-3 bg-blue-50 border border-blue-200 rounded-xl space-y-1.5">
           <label class="block text-xs font-bold text-blue-950 flex items-center justify-between">
             <span>Tarik Data Sebut Harga Terdahulu:</span>
@@ -296,7 +296,7 @@
     let currentCompany = 'MZR';
     let currentDocType = 'QUOT'; // 'QUOT' | 'DO' | 'INV'
     let availableItems = [];
-    let linkedQuoteNo = null; // Menyimpan nombor rujukan sebut harga bagi DO/Invois
+    let linkedQuoteNo = null;
 
     // ================= 3. BACA DATA ITEM DARI item.json =================
     async function loadItems() {
@@ -309,7 +309,7 @@
         availableItems = [
           {
             "value": "OPT-001",
-            "label": "Lenovo Yoga Slim 7i (Gen 9) [Core Ultra 7, 16GB, 1TB SSD, 14-inci OLED] - RM5,000",
+            "label": "Lenovo Yoga Slim 7i (Gen 9) [Core Ultra 7, 16GB, 1TB SSD, 14-inci OLED] - RM4,999",
             "type": "laptop_only",
             "brand": "Lenovo",
             "model": "Yoga Slim 7i (Gen 9)",
@@ -478,7 +478,6 @@
       const placeholderNo = `${currentPrefix}/${year}/----`;
       const subtotal = item ? item.price * qty : 0;
 
-      // Label tajuk dokumen
       let docTitleMZR = "SEBUT HARGA RASMI";
       let docTitleALT = "QUOTATION";
       let docNoLabel = "No. Sebut Harga";
@@ -826,7 +825,6 @@
       label.textContent = "Mengunci No. Siri di Pelayan...";
 
       try {
-        // 1. Minta nombor siri rasmi yang unik dari Upstash Redis
         const res = await fetch('/api/get-quote-no', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -839,7 +837,6 @@
         const officialDocNo = data.quoteNo;
         document.getElementById('active-quote-no').textContent = officialDocNo;
 
-        // 2. Simpan rekod pelanggan & item ke Upstash Redis jika menjana Sebut Harga
         const selectedValue = document.getElementById('item-dropdown').value;
         const selectedItem = availableItems.find(i => i.value === selectedValue);
         const qty = parseInt(document.getElementById('item-qty').value) || 1;
@@ -869,7 +866,6 @@
 
         label.textContent = "Menjana Dokumen PDF...";
 
-        // 3. Jana dan muat turun fail PDF (Tetapan skala kemas tanpa terpotong)
         const element = document.getElementById('quotation-paper');
         const safeFileName = officialDocNo.replace(/[\/\\]/g, '_');
 
