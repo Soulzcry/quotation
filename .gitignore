@@ -1,5 +1,6 @@
-.env
-node_modules/
-.vercel
-.git
 .gitignore
+node_modules
+.env
+.env.local
+.vercel
+*.log
